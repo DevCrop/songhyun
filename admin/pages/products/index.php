@@ -1,90 +1,60 @@
 <?php
 include_once "../../../inc/lib/base.class.php";
 
-$pageName = "FAQ";
-$depthnum = 7;
+$pageName = "제품관리";
+$depthnum = 3;
 
 $db = DB::getInstance();
 
-// 기본 페이지네이션 변수
+// ======================= 페이지네이션 변수 =======================
 $perpage = 10;
 $listCurPage = isset($_POST['page']) ? (int)$_POST['page'] : (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 $pageBlock = 2;
 $count = ($listCurPage - 1) * $perpage;
 
 
-// ========================= WHERE 조건 구성 =========================
-$active_filter = $_GET['is_active'] ?? '';
-$categories = $_GET['categories'] ?? '';
 $searchColumn = $_GET['searchColumn'] ?? '';
 $searchKeyword = $_GET['searchKeyword'] ?? '';
 
 $where = "WHERE 1=1";
 $params = [];
 
-
-if ($active_filter !== '') {
-    $where .= " AND f.is_active = :is_active";
-    $params[':is_active'] = (int)$active_filter;
-}
-
-if (!empty($categories)) {
-    $where .= " AND f.categories = :categories";
-    $params[':categories'] = (int)$categories;
-}
-
 if (!empty($searchColumn) && !empty($searchKeyword)) {
-    $allowedColumns = ['question', 'answer'];
+    $allowedColumns = ['title', 'position'];
     if (in_array($searchColumn, $allowedColumns)) {
-        $where .= " AND f.{$searchColumn} LIKE :searchKeyword";
+        $where .= " AND d.{$searchColumn} LIKE :searchKeyword";
         $params[':searchKeyword'] = "%{$searchKeyword}%";
     }
 }
-// ========================= END WHERE =========================
 
-
-// ========================= 전체 개수 조회 =========================
-$totalSql = "
-    SELECT COUNT(*) 
-    FROM nb_faqs f
-    {$where}
-";
+// ======================= 전체 개수 조회 =======================
+$totalSql = "SELECT COUNT(*) FROM nb_products d $where";
 $totalStmt = $db->prepare($totalSql);
 $totalStmt->execute($params);
 $totalCount = (int)$totalStmt->fetchColumn();
 $Page = ceil($totalCount / $perpage);
+// ============================================================
 
-// ========================= END 카운트 =========================
-
-
-// ========================= 실제 데이터 조회 =========================
+// ======================= 실제 데이터 조회 =======================
 $sql = "
-    SELECT f.id, f.categories, f.question, f.sort_no, f.is_active, f.updated_at
-    FROM nb_faqs f
-    {$where}
-    ORDER BY f.sort_no ASC
+    SELECT d.*, b.name_kr AS branch_name
+    FROM nb_products d
+    LEFT JOIN nb_branches b ON d.branch_id = b.id
+    $where
+    ORDER BY d.sort_no ASC
     LIMIT {$count}, {$perpage}
 ";
-
 $stmt = $db->prepare($sql);
 $stmt->execute($params);
-$faqRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-// ========================= END =========================
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-
-<!--=====================HEAD========================= -->
 <?php include_once "../../inc/admin.head.php"; ?>
 
-<body data-page="faq">
+<body data-page="doctor">
     <div class="no-wrap">
-
-        <!--=====================HEADER========================= -->
         <?php include_once "../../inc/admin.header.php"; ?>
-
         <main class="no-app no-container">
-
-            <!--=====================DRAWER========================= -->
             <?php include_once "../../inc/admin.drawer.php"; ?>
 
             <form method="GET" name="frm" id="frm" autocomplete="off">
@@ -94,17 +64,17 @@ $faqRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="no-toolbar">
                         <div class="no-toolbar-container no-flex-stack">
                             <div class="no-page-indicator">
-                                <h1 class="no-page-title"><?=$pageName?> 관리</h1>
+                                <h1 class="no-page-title"><?= $pageName ?> 관리</h1>
                                 <div class="no-breadcrumb-container">
                                     <ul class="no-breadcrumb-list">
                                         <li class="no-breadcrumb-item"><span>환경설정</span></li>
-                                        <li class="no-breadcrumb-item"><span><?=$pageName?> 관리</span></li>
+                                        <li class="no-breadcrumb-item"><span><?= $pageName ?> 관리</span></li>
                                     </ul>
                                 </div>
                             </div>
-                            <?php if($role->canDelete()):?>
+                            <?php if($role->canDelete()) :?>
                             <div class="no-items-center">
-                                <a href="./new.php" class="no-btn no-btn--main no-btn--big"> <?=$pageName?> 생성 </a>
+                                <a href="./new.php" class="no-btn no-btn--main no-btn--big"> <?= $pageName ?> 생성 </a>
                             </div>
                             <?php endif;?>
                         </div>
@@ -118,22 +88,23 @@ $faqRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                             <div class="no-card-body no-admin-column">
 
-
-                                <!-- 카테고리 선택 -->
+                                <!-- 지점 선택 -->
                                 <div class="no-admin-block">
-                                    <h3 class="no-admin-title">카테고리</h3>
+                                    <h3 class="no-admin-title">지점</h3>
                                     <div class="no-admin-content">
-                                        <select name="categories" id="categories">
+                                        <select name="branch_id" id="branch_category">
                                             <option value="">전체</option>
-                                            <?php foreach ($faq_categories as $code => $label): ?>
-                                            <option value="<?= $code ?>"
-                                                <?= ($categories ?? '') == $code ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($label) ?>
+                                            <?php foreach ($branches as $b): ?>
+                                            <option value="<?= $b['id'] ?>"
+                                                <?= ($branch_id ?? '') == $b['id'] ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($b['name_kr']) ?>
                                             </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
+
+
 
                                 <div class="no-admin-block">
                                     <h3 class="no-admin-title">노출 여부</h3>
@@ -174,11 +145,11 @@ $faqRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <div class="no-search-select">
                                         <select name="searchColumn" id="searchColumn">
                                             <option value="">선택</option>
-                                            <option value="question"
-                                                <?= ($searchColumn ?? '') === 'question' ? 'selected' : '' ?>>질문
+                                            <option value="title"
+                                                <?= ($searchColumn ?? '') === 'title' ? 'selected' : '' ?>>이름</option>
+                                            <option value="position"
+                                                <?= ($searchColumn ?? '') === 'position' ? 'selected' : '' ?>>직책
                                             </option>
-                                            <option value="answer"
-                                                <?= ($searchColumn ?? '') === 'answer' ? 'selected' : '' ?>>답변</option>
                                         </select>
                                         <div class="no-search-wrap no-ml">
                                             <div class="no-search-input">
@@ -195,38 +166,41 @@ $faqRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
 
 
+                    <!-- 리스트 -->
                     <div class="no-content-container">
                         <div class="no-card">
                             <div class="no-card-header">
-                                <h2 class="no-card-title"><?=$pageName?> 리스트</h2>
+                                <h2 class="no-card-title"><?= $pageName ?> 리스트</h2>
                             </div>
 
                             <div class="no-card-body">
                                 <div class="no-table-option">
                                     <?php if($role->canDelete()):?>
                                     <ul class="no-table-check-control">
-                                        <li><a href="#" class="no-btn no-btn--sm no-btn--check active "
-                                                data-action="selectAll">전체선택</a></li>
-                                        <li><a href="#" class="no-btn no-btn--sm no-btn--check"
-                                                data-action="deselectAll">선택해제</a></li>
-                                        <li><a href="#" class="no-btn no-btn--sm no-btn--check"
-                                                data-action="deleteSelected">선택삭제</a></li>
+                                        <ul class="no-table-check-control">
+                                            <li><a href="#" class="no-btn no-btn--sm no-btn--check active "
+                                                    data-action="selectAll">전체선택</a> </li>
+                                            <li><a href="#" class="no-btn no-btn--sm" data-action="deselectAll">선택해제</a>
+                                            </li>
+                                            <li><a href="#" class="no-btn no-btn--sm"
+                                                    data-action="deleteSelected">선택삭제</a></li>
+                                        </ul>
                                     </ul>
                                     <?php endif;?>
                                     <span>총 <?=$totalCount?>개</span>
                                 </div>
 
                                 <div class="no-table-responsive">
+
                                     <table class="no-table">
                                         <thead>
                                             <tr>
-                                                <?php if($role->canDelete()):?>
+                                                <?php if ($role->canDelete()) :?>
                                                 <th class="no-width-25 no-check">
                                                     <div class="no-checkbox-form">
                                                         <label>
@@ -235,36 +209,59 @@ $faqRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         </label>
                                                     </div>
                                                 </th>
-                                                <?php endif;?>
-                                                <th>카테고리</th>
-                                                <th>질문</th>
+                                                <?php endif ;?>
+                                                <th>지점</th>
+                                                <th>이름</th>
+                                                <th>썸네일</th>
+                                                <th>내부 이미지</th>
+                                                <th>직급</th>
                                                 <th>순서변경</th>
-                                                <th>노출</th>
                                                 <th>정렬</th>
-                                                <th>수정일</th>
+                                                <th>노출 여부</th>
                                                 <th>관리</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if (count($faqRows) > 0): ?>
-                                            <?php foreach ($faqRows as $row): ?>
+                                            <?php if (count($rows) > 0): ?>
+                                            <?php foreach ($rows as $row): ?>
                                             <tr>
-                                                <?php if($role->canDelete()) :?>
+                                                <?php if($role->canDelete()):?>
                                                 <td class="no-check">
                                                     <div class="no-checkbox-form">
                                                         <label>
                                                             <input type="checkbox" class="no-chk"
-                                                                value="<?= $row['id'] ?>" />
+                                                                value="<?= $row['id'] ?>">
                                                             <span><i class="bx bxs-check-square"></i></span>
                                                         </label>
                                                     </div>
                                                 </td>
                                                 <?php endif;?>
-                                                <td><?= $faq_categories[$row['categories']] ?? '기타' ?></td>
-                                                <td><?= htmlspecialchars($row['question']) ?></td>
+                                                <td><?= htmlspecialchars($row['branch_name'] ?? '-') ?></td>
+                                                <td><?= htmlspecialchars($row['title']) ?></td>
+                                                <!-- 썸네일 이미지 -->
+                                                <td>
+                                                    <?php if (!empty($row['thumb_image'])): ?>
+                                                    <img src="/uploads/doctors/<?= $row['thumb_image'] ?>" alt="썸네일"
+                                                        style="max-width: 60px;">
+                                                    <?php else: ?>
+                                                    <span style="color: #aaa;">-</span>
+                                                    <?php endif; ?>
+                                                </td>
+
+                                                <!-- 내부 이미지 -->
+                                                <td>
+                                                    <?php if (!empty($row['detail_image'])): ?>
+                                                    <img src="/uploads/doctors/<?= $row['detail_image'] ?>" alt="내부 이미지"
+                                                        style="max-width: 60px;">
+                                                    <?php else: ?>
+                                                    <span style="color: #aaa;">-</span>
+                                                    <?php endif; ?>
+                                                </td>
+
+                                                <td><?= htmlspecialchars($row['position']) ?></td>
+                                                </td>
 
                                                 <td class="sort-btn-group">
-                                                    <!-- sort_no가 클수록 위니까 버튼 누르면 sort_no를 크게/작게 조절 -->
                                                     <button type="button" class="sort-btn" data-id="<?= $row['id'] ?>"
                                                         data-action="up" data-no="<?= $row['sort_no'] + 1 ?>">
                                                         <i class='bx bx-chevron-down'></i>
@@ -283,15 +280,14 @@ $faqRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     </button>
                                                 </td>
 
-
+                                                <td><?= $row['sort_no'] ?></td>
                                                 <td>
                                                     <span
                                                         class="no-btn <?= $row['is_active'] ? 'no-btn--notice' : 'no-btn--normal' ?>">
                                                         <?= htmlspecialchars($is_active[$row['is_active']] ?? '미정') ?>
                                                     </span>
                                                 </td>
-                                                <td><?= $row['sort_no'] ?></td>
-                                                <td><?= substr($row['updated_at'], 0, 10) ?></td>
+
                                                 <td>
                                                     <div class="no-table-role">
                                                         <span class="no-role-btn"><i
@@ -299,12 +295,10 @@ $faqRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="no-table-action">
                                                             <a href="edit.php?id=<?= $row['id'] ?>"
                                                                 class="no-btn no-btn--sm no-btn--normal">보기</a>
-                                                            <?php if($role->canDelete()) :?>
+                                                            <?php if($role->canDelete()):?>
                                                             <button type="button"
                                                                 class="no-btn no-btn--sm no-btn--delete-outline delete-btn"
-                                                                data-id="<?= $row['id'] ?>">
-                                                                삭제
-                                                            </button>
+                                                                data-id="<?= $row['id'] ?>">삭제</button>
                                                             <?php endif;?>
                                                         </div>
                                                     </div>
@@ -313,12 +307,14 @@ $faqRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <?php endforeach; ?>
                                             <?php else: ?>
                                             <tr>
-                                                <td colspan="8" style="text-align: center; color: #888;">FAQ가 등록되지
-                                                    않았습니다.</td>
+                                                <td colspan="10" style="text-align: center; color: #888;">등록된 의료진이 없습니다.
+                                                </td>
                                             </tr>
                                             <?php endif; ?>
                                         </tbody>
                                     </table>
+
+
                                 </div>
                             </div>
                         </div>

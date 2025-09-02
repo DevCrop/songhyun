@@ -17,16 +17,8 @@ $pageBlock   = 2;
 $offset      = ($listCurPage - 1) * $perpage;
 
 /* =============================
- * 지점 데이터 (검색용)
- * ============================= */
-$branchesStmt = $db->prepare("SELECT id, name_kr FROM nb_branches ORDER BY id ASC");
-$branchesStmt->execute();
-$branches = $branchesStmt->fetchAll(PDO::FETCH_ASSOC);
-
-/* =============================
  * 필터 파라미터
  * ============================= */
-$branch_id     = isset($_GET['branch_id']) ? trim($_GET['branch_id']) : '';
 $searchColumn  = isset($_GET['searchColumn']) ? trim($_GET['searchColumn']) : '';
 $searchKeyword = isset($_GET['searchKeyword']) ? trim($_GET['searchKeyword']) : '';
 
@@ -36,10 +28,6 @@ $searchKeyword = isset($_GET['searchKeyword']) ? trim($_GET['searchKeyword']) : 
 $where  = "WHERE 1=1";
 $params = [];
 
-if ($branch_id !== '') {
-    $where .= " AND s.branch_id = :branch_id";
-    $params[':branch_id'] = (int)$branch_id;
-}
 if ($searchColumn !== '' && $searchKeyword !== '') {
     // 실제 컬럼만 허용
     $allowed = ['path','page_title','meta_title'];
@@ -55,7 +43,6 @@ if ($searchColumn !== '' && $searchKeyword !== '') {
 $countSql = "
     SELECT COUNT(*)
     FROM nb_branch_seos s
-    LEFT JOIN nb_branches b ON s.branch_id = b.id
     {$where}
 ";
 $countStmt = $db->prepare($countSql);
@@ -74,10 +61,14 @@ if ($Page > 0 && $listCurPage > $Page) {
  * ============================= */
 $sql = "
     SELECT 
-        s.id, s.branch_id, b.name_kr AS branch_label, 
-        s.path, s.page_title, s.meta_title, s.updated_at
+        s.id, 
+        s.path, 
+        s.page_title, 
+        s.meta_title, 
+        s.topic_title,
+        s.meta_keywords,
+        s.updated_at
     FROM nb_branch_seos s
-    LEFT JOIN nb_branches b ON s.branch_id = b.id
     {$where}
     ORDER BY s.id DESC
     LIMIT :offset, :perpage
@@ -91,6 +82,8 @@ $stmt->bindValue(':perpage', $perpage, PDO::PARAM_INT);
 $stmt->execute();
 $seoRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
+
 
 <!--=====================HEAD========================= -->
 <?php include_once "../../inc/admin.head.php"; ?>
@@ -136,21 +129,6 @@ $seoRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                             <div class="no-card-body no-admin-column">
 
-                                <!-- 지점 선택 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title">지점</h3>
-                                    <div class="no-admin-content">
-                                        <select name="branch_id" id="branch_category">
-                                            <option value="">전체</option>
-                                            <?php foreach ($branches as $b): ?>
-                                            <option value="<?= $b['id'] ?>"
-                                                <?= ($branch_id ?? '') == $b['id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($b['name_kr']) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
 
                                 <!-- 검색어 -->
                                 <div class="no-admin-block wide">
@@ -175,8 +153,6 @@ $seoRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
                     </div>
-
-
 
 
                     <div class="no-content-container">
@@ -210,7 +186,6 @@ $seoRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     </div>
                                                 </th>
                                                 <th>번호</th>
-                                                <th>지점</th>
                                                 <th>경로</th>
                                                 <th>제목</th>
                                                 <th>Meta Title</th>
@@ -232,7 +207,6 @@ $seoRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     </div>
                                                 </td>
                                                 <td><?= htmlspecialchars($row['id']) ?></td>
-                                                <td><?= htmlspecialchars($row['branch_label']) ?></td>
                                                 <td><?= htmlspecialchars($row['path']) ?></td>
                                                 <td><?= htmlspecialchars($row['page_title']) ?></td>
                                                 <td><?= htmlspecialchars($row['meta_title']) ?></td>

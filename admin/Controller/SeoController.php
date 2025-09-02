@@ -13,7 +13,6 @@ try {
     // ============ INSERT ============
     if ($mode === 'insert') {
         $validator = new Validator();
-        $validator->require('branch_id', $input['branch_id'] ?? '', '지점');
         $validator->require('path', $input['path'] ?? '', '경로');
         $validator->require('page_title', $input['page_title'] ?? '', '페이지 제목');
         $validator->require('meta_title', $input['meta_title'] ?? '', '메타 타이틀');
@@ -30,14 +29,11 @@ try {
 
         // 유효성 통과 후 실제 저장
         $result = SeoModel::insert([
-            'branch_id' => (int)$input['branch_id'],
             'path' => trim($input['path']),
             'page_title' => trim($input['page_title']),
             'meta_title' => trim($input['meta_title']),
             'meta_description' => trim($input['meta_description']),
             'meta_keywords' => trim($input['meta_keywords']),
-            'section_title' => trim($input['section_title'] ?? ''),
-            'topic_title' => trim($input['topic_title'] ?? '')
         ]);
 
         echo json_encode([
@@ -58,7 +54,6 @@ try {
         }
 
         $validator = new Validator();
-        $validator->require('branch_id', $input['branch_id'] ?? '', '지점');
         $validator->require('path', $input['path'] ?? '', '경로');
         $validator->require('page_title', $input['page_title'] ?? '', '페이지 제목');
         $validator->require('meta_title', $input['meta_title'] ?? '', '메타 타이틀');
@@ -74,14 +69,11 @@ try {
         }
 
         $data = [
-            'branch_id' => (int)$input['branch_id'],
             'path' => trim($input['path']),
             'page_title' => trim($input['page_title']),
             'meta_title' => trim($input['meta_title']),
             'meta_description' => trim($input['meta_description']),
             'meta_keywords' => trim($input['meta_keywords']),
-            'section_title' => trim($input['section_title'] ?? ''),
-            'topic_title' => trim($input['topic_title'] ?? '')
         ];
 
         $result = SeoModel::update($id, $data);

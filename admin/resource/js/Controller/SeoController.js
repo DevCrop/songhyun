@@ -8,14 +8,12 @@ export class SeoController {
     insertBtnSelector = "#submitBtn",
     updateBtnSelector = "#editBtn",
     deleteBtnSelector = ".delete-btn",
-    branchSelector = "#branch_id",
     pathSelector = "#path",
   } = {}) {
     this.form = document.querySelector(formSelector);
     this.insertBtn = document.querySelector(insertBtnSelector);
     this.updateBtn = document.querySelector(updateBtnSelector);
     this.deleteButtons = document.querySelectorAll(deleteBtnSelector);
-    this.branchSelect = document.querySelector(branchSelector);
     this.pathSelect = document.querySelector(pathSelector);
   }
 
@@ -31,9 +29,8 @@ export class SeoController {
     }
 
     this.attachDeleteEvents();
-    this.attachBranchChangeEvent();
 
-    this.initSelectedBranchPaths();
+    this.loadMenuOptions();
 
     initCheckboxManager(async (selectedIds) => {
       const formData = new FormData();
@@ -98,103 +95,62 @@ export class SeoController {
       alert(err.message || "처리 중 오류가 발생했습니다.");
     }
   }
+  async loadMenuOptions() {
+    if (!this.pathSelect) return;
 
-  attachBranchChangeEvent() {
-    console.log(this.pathSelect);
-    if (!this.branchSelect || !this.pathSelect) return;
+    // 현재 선택값 보존 (data-current 우선)
+    const current =
+      this.pathSelect.getAttribute("data-current") ||
+      this.pathSelect.value ||
+      "";
 
-    this.branchSelect.addEventListener("change", async () => {
-      const selectedOption =
-        this.branchSelect.options[this.branchSelect.selectedIndex];
-      const jsonUrl = selectedOption.getAttribute("data-json");
+    // 초기화
+    this.pathSelect.innerHTML = '<option value="">페이지 경로 선택</option>';
 
-      this.pathSelect.innerHTML = '<option value="">페이지 경로 선택</option>';
-      if (!jsonUrl) return;
-
-      try {
-        const res = await fetch(jsonUrl);
-        if (!res.ok) throw new Error("JSON 불러오기 실패");
-
-        const data = await res.json();
-        const pages = [];
-
-        if (Array.isArray(data.pages)) {
-          this.extractPaths(data.pages, data.dirname || "", pages, []);
-        }
-
-        pages.forEach((item) => {
-          const option = document.createElement("option");
-          option.value = item.path;
-          option.textContent = item.title;
-          this.pathSelect.appendChild(option);
-        });
-      } catch (error) {
-        console.warn("오류 발생:", error);
-        alert("페이지 정보를 불러오는 데 실패했습니다.");
-      }
-    });
-  }
-
-  extractPaths(pages, baseDir, result, parentTitles = []) {
     const joinPath = (a, b) =>
       `${String(a).replace(/\/+$/, "")}/${String(b).replace(/^\/+/, "")}`;
 
-    pages.forEach((page) => {
-      if (page.board_no) return;
+    function extractPaths(pages, baseDir, acc, parents = []) {
+      if (!Array.isArray(pages)) return;
+      pages.forEach((page) => {
+        const dirname = page.dirname || baseDir || "";
+        const filename = page.filename || "";
+        const title = page.title || "";
+        const children = Array.isArray(page.pages) ? page.pages : null;
+        const fullTitle = [...parents, title].filter(Boolean).join(" - ");
 
-      const dirname = page.dirname || baseDir;
-      const filename = page.filename; // 파일명(stem)
-      const title = page.title || "";
-      const children = Array.isArray(page.pages) ? page.pages : null;
-
-      const fullTitle = [...parentTitles, title].filter(Boolean).join(" - ");
-
-      if (filename && dirname && (!children || children.length === 0)) {
-        result.push({
-          path: joinPath(dirname, `${filename}.php`),
-          title: fullTitle,
-        });
-      }
-
-      if (children) {
-        this.extractPaths(children, dirname, result, [...parentTitles, title]);
-      }
-    });
-  }
-
-  async initSelectedBranchPaths() {
-    if (!this.branchSelect || !this.pathSelect) return;
-
-    const selectedOption =
-      this.branchSelect.options[this.branchSelect.selectedIndex];
-    const jsonUrl = selectedOption.getAttribute("data-json");
-    const currentSelectedPath = this.pathSelect.options[0]?.value || "";
-
-    this.pathSelect.innerHTML = '<option value="">페이지 경로 선택</option>';
-    if (!jsonUrl) return;
+        if (dirname && filename && (!children || children.length === 0)) {
+          acc.push({
+            path: joinPath(dirname, `${filename}.php`),
+            title: fullTitle || filename,
+          });
+        }
+        if (children) extractPaths(children, dirname, acc, [...parents, title]);
+      });
+    }
 
     try {
-      const res = await fetch(jsonUrl);
-      if (!res.ok) throw new Error("JSON 불러오기 실패");
+      const res = await fetch("/json/menu.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("menu.json 불러오기 실패");
 
       const data = await res.json();
-      const pages = [];
+      const items = [];
+      extractPaths(data.pages || [], data.dirname || "", items);
 
-      if (Array.isArray(data.pages)) {
-        this.extractPaths(data.pages, data.dirname || "", pages, []);
-      }
-
-      pages.forEach((item) => {
-        const option = document.createElement("option");
-        option.value = item.path;
-        option.textContent = item.title;
-        if (item.path === currentSelectedPath) {
-          option.selected = true;
-        }
-        this.pathSelect.appendChild(option);
+      items.forEach((item) => {
+        const opt = document.createElement("option");
+        opt.value = item.path;
+        opt.textContent = item.title;
+        this.pathSelect.appendChild(opt);
       });
-    } catch (error) {
-      console.warn("초기 경로 로딩 오류:", error);
+      if (
+        current &&
+        Array.from(this.pathSelect.options).some((o) => o.value === current)
+      ) {
+        this.pathSelect.value = current;
+      }
+    } catch (e) {
+      console.warn("menu.json 로딩 오류:", e);
     }
   }
 }

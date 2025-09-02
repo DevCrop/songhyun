@@ -28,9 +28,6 @@ if ($id) {
     exit;
 }
 
-// 지점 목록
-$stmt = $db->query("SELECT id, name_kr FROM nb_branches WHERE id IN (2, 3, 4) ORDER BY id ASC");
-$branches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 include_once "../../inc/admin.title.php";
@@ -50,7 +47,7 @@ include_once "../../inc/admin.js.php";
             <form id="frm" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="mode" value="update">
                 <input type="hidden" name="id" value="<?=$_GET['id']?>">
-				<input type="hidden" name="sort_no" value="<?=$faq['sort_no']?>">
+                <input type="hidden" name="sort_no" value="<?=$faq['sort_no']?>">
 
                 <section class="no-content">
                     <div class="no-toolbar">
@@ -74,21 +71,7 @@ include_once "../../inc/admin.js.php";
                             </div>
 
                             <div class="no-card-body no-admin-column no-admin-column--detail">
-                                <!-- 지점 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title"><label for="branch_category">지점</label></h3>
-                                    <div class="no-admin-content">
-                                        <select name="branch_id" id="branch_category" required>
-                                            <option value="">지점 선택</option>
-                                            <?php foreach ($branches as $branch): ?>
-                                            <option value="<?= $branch['id'] ?>"
-                                                <?= ($faq['branch_id'] == $branch['id']) ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($branch['name_kr']) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
+
 
                                 <!-- 카테고리 -->
                                 <div class="no-admin-block">

@@ -27,6 +27,15 @@ $menus = [
         ]
     ],
     3 => [
+        'key' => 'products',
+        'title' => '제품 관리',
+        'icon' => 'fa-mug-saucer',
+        'url'  => '/admin/pages/products/index.php',
+        'subs' => []
+        
+    ],
+    4 => [
+     
         'key' => 'design',
         'title' => '디자인',
         'icon' => 'fa-paint-roller',
@@ -35,45 +44,13 @@ $menus = [
             ['title' => '팝업 관리', 'url' => 'design/popup.list.php'],
         ]
     ],
-    4 => [
-        'key' => 'facility',
-        'title' => '시설 관리',
-        'icon' => 'fa-hospital',
-        'url'  => '/admin/pages/facility/index.php',
-        'subs' => []
-    ],
     5 => [
-        'key' => 'doctor',
-        'title' => '의료진 관리',
-        'icon' => 'fa-user-doctor',
-        'url'  => '/admin/pages/doctor/index.php',
-        'subs' => []
-    ],
-    6 => [
-        'key' => 'nonpay',
-        'title' => '비급여 항목 관리',
-        'icon' => 'fa-receipt',
-        'url'  => '/admin/pages/nonpay/index.php',
-    ],
-    7 => [
         'key' => 'faq',
         'title' => 'FAQ 관리',
         'icon' => 'fa-clipboard-question',
         'url'  => '/admin/pages/faq/index.php',
     ],
-    8 => [
-        'key' => 'account',
-        'title' => '계정 관리',
-        'icon' => 'fa-user-gear',
-        'url'  => '/admin/pages/account',
-    ],
-    9 => [
-        'key' => 'user',
-        'title' => '회원 관리',
-        'icon' => 'fa-users',
-        'url'  => '/admin/pages/member',
-    ],
-    10 => [
+    6 => [
         'key' => 'setting',
         'title' => '사이트 정보관리',
         'icon' => 'fa-globe',
@@ -83,7 +60,7 @@ $menus = [
             ['title' => '페이지별 SEO 관리', 'url' => 'setting/seo.php'],
         ]
     ],
-    11 => [
+    7 => [
         'key' => 'inquiry',
         'title' => '문의 관리',
         'icon' => 'fa-envelope-open-text',
@@ -93,13 +70,7 @@ $menus = [
             ['title' => '예진표 (맞춤한약)', 'url' => 'inquiry/prescription.php'],
         ]
     ],
-     12 => [
-        'key' => 'etcs',
-        'title' => '기타 관리',
-        'icon' => 'fa-circle-info',
-        'url'  => '/admin/pages/etcs',
-    ],
-	  13 => [
+	  8 => [
         'key' => 'log',
         'title' => '접속 통계',
         'icon' => 'fa-chart-simple',

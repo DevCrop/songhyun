@@ -4,17 +4,13 @@ include_once "../../../inc/lib/base.class.php";
 $pageName = "페이지별 SEO ";
 $depthnum = 10;
 
-$id = $_GET['id'] ?? null;
+$id  = $_GET['id'] ?? null;
 $seo = null;
 
 $page = (int)($_GET['page'] ?? $_POST['page'] ?? 1);
 
 try {
-    $db = DB::getInstance(); 
-
-    // 지점 목록
-    $stmt = $db->query("SELECT * FROM nb_branches WHERE id IN (1, 2, 3, 4) ORDER BY id ASC");
-    $branches = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $db = DB::getInstance();
 
     // SEO 정보
     if ($id) {
@@ -37,6 +33,7 @@ include_once "../../inc/admin.title.php";
 include_once "../../inc/admin.css.php";
 include_once "../../inc/admin.js.php";
 ?>
+
 
 </head>
 
@@ -75,28 +72,12 @@ include_once "../../inc/admin.js.php";
 
                             <div class="no-card-body no-admin-column no-admin-column--detail">
 
-                                <!-- 지점 선택 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title"><label for="branch_id">지점</label></h3>
-                                    <div class="no-admin-content">
-                                        <select name="branch_id" id="branch_id" required>
-                                            <option value="">지점 선택</option>
-                                            <?php foreach ($branches as $branch): ?>
-                                            <option value="<?= $branch['id'] ?>"
-                                                data-json="/json/<?= htmlspecialchars($branch['json_path']) ?>"
-                                                <?= $seo && $seo['branch_id'] == $branch['id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($branch['name_kr']) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-
                                 <!-- 경로 선택 -->
                                 <div class="no-admin-block">
                                     <h3 class="no-admin-title"><label for="path">경로</label></h3>
                                     <div class="no-admin-content">
-                                        <select name="path" id="path" required>
+                                        <select name="path" id="path"
+                                            data-current="<?= htmlspecialchars($seo['path'] ?? '') ?>" required>
                                             <option value="<?= htmlspecialchars($seo['path'] ?? '') ?>" selected>
                                                 <?= htmlspecialchars($seo['path'] ?? '페이지 경로 선택') ?>
                                             </option>
@@ -114,25 +95,6 @@ include_once "../../inc/admin.js.php";
                                     </div>
                                 </div>
 
-                                <!-- 페이지 제목 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title"><label for="section_title">중간 카테고리 제목</label></h3>
-                                    <div class="no-admin-content">
-                                        <input type="text" id="section_title" name="section_title"
-                                            value="<?= htmlspecialchars($seo['section_title'] ?? '') ?>"
-                                            placeholder="예: 여성암 검사 페이지" required>
-                                    </div>
-                                </div>
-                                <!-- 페이지 제목 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title"><label for="topic_title">세부 주제 제목
-                                        </label></h3>
-                                    <div class="no-admin-content">
-                                        <input type="text" id="topic_title" name="topic_title"
-                                            value="<?= htmlspecialchars($seo['topic_title'] ?? '') ?>"
-                                            placeholder="예: 여성암 검사 페이지" required>
-                                    </div>
-                                </div>
 
                                 <!-- Meta Title -->
                                 <div class="no-admin-block">

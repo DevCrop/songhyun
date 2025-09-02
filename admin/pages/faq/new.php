@@ -2,14 +2,12 @@
 include_once "../../../inc/lib/base.class.php";
 
 $pageName = "FAQ ";
-$depthnum = 7;
+$depthnum = 5;
 
 
 try {
     $db = DB::getInstance(); 
-    $branches = [];
-    $stmt = $db->query("SELECT id, name_kr FROM nb_branches WHERE id IN (2, 3, 4) ORDER BY id ASC");
-    $branches = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  
 } catch (Exception $e) {
     echo "데이터베이스 연결 오류: " . $e->getMessage();
     exit;
@@ -56,25 +54,6 @@ include_once "../../inc/admin.js.php";
 
                             <div class="no-card-body no-admin-column no-admin-column--detail">
 
-                                <!-- 지점 선택 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title"><label for="branch_category">지점</label></h3>
-                                    <div class="no-admin-content">
-                                        <select name="branch_id" id="branch_category" required>
-                                            <option value="">지점 선택</option>
-                                            <?php foreach ($branches as $branch): ?>
-                                            <option value="<?= $branch['id'] ?>"
-                                                data-json="/json/<?= htmlspecialchars($branch['json_path']) ?>"
-                                                <?= isset($branch_id) && $branch_id == $branch['id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($branch['name_kr']) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <span class="no-admin-info">
-                                            <i class="bx bxs-info-circle"></i> SEO를 등록할 지점을 선택하세요
-                                        </span>
-                                    </div>
-                                </div>
 
                                 <!-- 카테고리 선택 -->
                                 <div class="no-admin-block">
@@ -89,9 +68,7 @@ include_once "../../inc/admin.js.php";
                                             </option>
                                             <?php endforeach; ?>
                                         </select>
-                                        <div class="no-admin-desc" style="margin-top: 5px; color: #888;">
-                                            FAQ 유형을 선택하세요.
-                                        </div>
+
                                     </div>
                                 </div>
 
@@ -100,8 +77,8 @@ include_once "../../inc/admin.js.php";
                                 <div class="no-admin-block">
                                     <h3 class="no-admin-title"><label for="question">질문</label></h3>
                                     <div class="no-admin-content">
-                                        <input type="text" id="question" name="question"
-                                            placeholder="예: 진료 시간은 어떻게 되나요?" required>
+                                        <input type="text" id="question" name="question" placeholder="질문 내용을 입력해주세요."
+                                            required>
                                     </div>
                                 </div>
 
@@ -110,7 +87,7 @@ include_once "../../inc/admin.js.php";
                                     <h3 class="no-admin-title"><label for="answer">답변</label></h3>
                                     <div class="no-admin-content">
                                         <textarea name="answer" id="answer" class="no-textarea--detail" rows="5"
-                                            placeholder="예: 평일 오전 9시부터 오후 6시까지 진료합니다."></textarea>
+                                            placeholder="답변 내용을 입력해주세요"></textarea>
                                     </div>
                                 </div>
 

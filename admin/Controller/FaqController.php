@@ -11,7 +11,6 @@ try {
 
     if ($mode === 'insert') {
         $validator = new Validator();
-        $validator->require('branch_id', $input['branch_id'] ?? '', '지점');
         $validator->require('categories', $input['categories'] ?? '', '카테고리');
         $validator->require('question', $input['question'] ?? '', '질문');
         $validator->require('answer', $input['answer'] ?? '', '답변');
@@ -23,15 +22,8 @@ try {
             ]);
             exit;
         }
-		
-		/*
-        $sortNo = (isset($input['sort_no']) && (int)$input['sort_no'] > 0)
-            ? (int)$input['sort_no']
-            : FaqModel::getMaxSortNo() + 1;
-		*/
         
 		$data = [
-            'branch_id'  => (int)$input['branch_id'],
             'categories' => (int)$input['categories'],
             'question'   => trim((string)$input['question']),
             'answer'     => trim((string)$input['answer']),
@@ -59,7 +51,6 @@ try {
         }
 
         $validator = new Validator();
-        $validator->require('branch_id', $input['branch_id'] ?? '', '지점');
         $validator->require('categories', $input['categories'] ?? '', '카테고리');
         $validator->require('question', $input['question'] ?? '', '질문');
         $validator->require('answer', $input['answer'] ?? '', '답변');
@@ -83,7 +74,6 @@ try {
         }
 
         $data = [
-            'branch_id'  => (int)$input['branch_id'],
             'categories' => (int)$input['categories'],
             'question'   => trim((string)$input['question']),
             'answer'     => trim((string)$input['answer']),
@@ -226,7 +216,6 @@ try {
         FaqModel::shiftSortNosForUpdate($oldNo, $newNo, $id);
 
         $dataToUpdate = [
-            'branch_id'  => $currentData['branch_id'],
             'categories' => $currentData['categories'],
             'question'   => $currentData['question'],
             'answer'     => $currentData['answer'],
