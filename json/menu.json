@@ -1,0 +1,62 @@
+{
+  "site_name": "미건시스템",
+  "pages": [
+    {
+      "title": "회사 소개",
+      "dirname": "about",
+      "pages": [
+        {
+          "title": "회사 소개",
+          "filename": "company"
+        }
+      ]
+    },
+    {
+      "title": "제품 안내",
+      "dirname": "products",
+      "pages": [
+        {
+          "title": "보유 브랜드 갤러리",
+          "filename": "gallery"
+        },
+        {
+          "title": "브랜드 리스트",
+          "filename": "list"
+        },
+        {
+          "title": "브랜드 상세페이지",
+          "filename": "view"
+        }
+      ]
+    },
+    {
+      "title": "고객 지원",
+      "dirname": "cs",
+      "pages": [
+        {
+          "title": "AS 센터",
+          "filename": "as"
+        },
+        {
+          "title": "간편 문의",
+          "filename": "notice"
+        },
+
+        {
+          "title": "FAQ",
+          "filename": "faq"
+        }
+      ]
+    },
+    {
+      "title": "문의 지원",
+      "dirname": "contact",
+      "pages": [
+        {
+          "title": "문의하기",
+          "filename": "inquiry"
+        }
+      ]
+    }
+  ]
+}

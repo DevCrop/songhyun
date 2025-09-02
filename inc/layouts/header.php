@@ -1,0 +1,62 @@
+</head>
+
+<?php
+    $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+
+    if (stripos($path, 'view') !== false) {
+        $pageType = 'view';
+    } elseif (strpos($path, '/pages/') !== false || rtrim($path, '/') === '/pages') {
+        $pageType = 'sub';
+    } else {
+        $pageType = 'main';
+    }
+    ?>
+
+<body data-page="<?= $pageType ?>">
+    <div class="no-backdrop" id="no-backdrop"></div>
+    <header class="no-header" id="header" data-lenis-prevent>
+        <div class="no-header-container no-container-3xl">
+            <div class="no-header__inner">
+                <h1 class="no-header-logo">
+                    <a href="/">
+                        <figure>
+                            <img src="<?=$ROOT?>/resource/images/logo/logo-white.svg" alt="" class="logo-white">
+                            <img src="<?=$ROOT?>/resource/images/logo/logo-brand.svg" alt="" class="logo-brand">
+                        </figure>
+                        <div class="--blind">미건시스템 (주) 식스닷</div>
+                    </a>
+                </h1>
+                <nav class="no-header-menu">
+                    <ul class="no-header-gnb">
+                        <?php foreach ($MENU_ITEMS as $di => $depth):
+                                    $depth_active = $depth['isActive'] ? 'active' : '';
+                                ?>
+                        <li>
+                            <a href="<?= $depth['path'] ?>"
+                                class="f-body-2 <?= $depth_active ?>"><?= $depth['title'] ?></a>
+                            <?php if (array_key_exists('pages', $depth) && count($depth['pages']) > 0) : ?>
+                            <ul class="no-header__lnb">
+                                <?php foreach ($depth['pages'] as $pi => $PAGE): 
+                                                $page_active = $PAGE['isActive'] ? 'active' : '';    
+                                                ?>
+                                <li class="no-header__lnb--item <?=$page_active?>">
+                                    <a href="<?=$PAGE['path']?>" class="no-header__lnb--link f-body-3">
+                                        <?=$PAGE['title']?>
+                                    </a>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <?php endif; ?>
+                        </li>
+                        <?php endforeach; ?>
+
+                    </ul>
+                </nav>
+                <button type="button" class="no-header-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
