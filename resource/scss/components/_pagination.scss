@@ -10,9 +10,9 @@
   gap: 0.8rem;
 
   a {
-    width: fluid(18, 36);
+    width: fluid(24, 36);
 
-    height: fluid(18, 36);
+    height: fluid(24, 36);
     border-radius: 4rem;
     @include flex-center();
 
@@ -27,7 +27,6 @@
 
     &.active {
       background-color: #222;
-
       color: #fff;
     }
 

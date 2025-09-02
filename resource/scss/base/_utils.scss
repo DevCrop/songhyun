@@ -67,6 +67,11 @@
   align-items: flex-end;
   border-bottom: 1px solid var(--clr-border-strong);
   padding-bottom: fluid(24, 32);
+  @include mq(md) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gutter-sm);
+  }
 }
 
 .--section-sub-title-border {
@@ -79,11 +84,20 @@
   padding-bottom: fluid(24, 36);
   border-bottom: 1px solid var(--clr-border-default);
   align-items: center;
+  @include mq(md) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gutter-sm);
+  }
 }
 
 .--section-title-with-search {
   display: flex;
   justify-content: space-between;
+  @include mq(sm) {
+    flex-direction: column;
+    gap: var(--gutter-sm);
+  }
 }
 .--section-title {
   text-align: center;
@@ -92,6 +106,8 @@
   display: flex;
   flex-direction: column;
   gap: fluid(4, 6);
+  font-size: fluid(13, 18);
+  font-weight: 400;
 }
 
 b {
@@ -116,13 +132,15 @@ b {
 }
 
 .--cnt {
-  margin-top: fluid(48, 64);
+  margin-top: fluid(32, 64);
 }
 
 .--pos-logo {
   position: absolute;
   bottom: fluid(8, 24);
-  left: fluid(24, 40);
+  left: fluid(12, 40);
+  width: fluid(72, 160);
+  height: fluid(24, 54);
 }
 
 .--require-symbol {
@@ -157,6 +175,15 @@ b {
   display: flex;
   gap: fluid(8, 12);
   margin-top: fluid(16, 24);
+  @include mq(md) {
+    margin-top: 0;
+  }
+  @include mq(sm) {
+    flex-direction: column;
+    width: 100%;
+    a {
+    }
+  }
   > div {
     a {
       display: flex;
@@ -164,8 +191,8 @@ b {
       justify-content: center;
       width: 100%;
       gap: fluid(8, 12);
+      padding: 0 fluid(16, 28);
       height: var(--input-height);
-      min-width: 24rem;
       color: #fff;
       text-decoration: none;
       transition: ease all 0.3s;
@@ -178,7 +205,6 @@ b {
   .naver a {
     background: #03c75a;
     &:hover {
-      background: darken(#03c75a, 8%);
     }
   }
 
@@ -186,7 +212,6 @@ b {
     background: #ffe812;
     color: #381e1f;
     &:hover {
-      background: darken(#ffe812, 8%);
     }
   }
 }

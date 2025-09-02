@@ -26,7 +26,7 @@ $notices = [
   [
     "id" => 100,
     "cate" => "업데이트",
-    "title" => "쇼룸 운영시간 변경 안내",
+    "title" => "쇼룸 운영시간 변경 안내 쇼룸 운영시간 변경 안내쇼룸 운영시간 변경 안내",
     "date" => "2025-08-20",
     "views" => 189
   ],
@@ -76,8 +76,8 @@ $notices = [
                     <table class="notice">
                         <colgroup>
                             <col style="width: auto;" />
-                            <col style="width: 120px;" />
-                            <col style="width: 100px;" />
+                            <col />
+                            <col />
                         </colgroup>
                         <thead>
                             <tr class="">

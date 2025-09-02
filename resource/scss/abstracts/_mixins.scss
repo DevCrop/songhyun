@@ -51,7 +51,6 @@
 @mixin set-fluid($map) {
   @each $key, $val in $map {
     $min: map-get($val, "min");
-
     $max: map-get($val, "max");
 
     #{$key}: func.fluid($min, $max);

@@ -12,5 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@prettier/plugin-php": "^0.21.0"
+  },
+  "devDependencies": {
+    "sass": "^1.91.0"
   }
 }

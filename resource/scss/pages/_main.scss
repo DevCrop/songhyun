@@ -8,6 +8,10 @@
     height: 100vh;
     article {
       height: 100%;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
     &-txt {
       position: absolute;
@@ -17,7 +21,7 @@
       color: #fff;
       max-width: 132rem;
       width: 100%;
-
+      padding: 0 fluid(18, 24);
       span {
         margin-bottom: fluid(2, 4);
         display: block;
@@ -32,9 +36,14 @@
       .swiper-pagination {
         text-align: end;
         max-width: 132rem;
+        padding: 0 fluid(18, 24);
         left: 50%;
         bottom: fluid(64, 120);
         transform: translateX(-50%);
+        @include mq(md) {
+          bottom: fluid(20, 36);
+          text-align: center;
+        }
         span {
           width: 6.4rem;
           height: 3px;
@@ -46,25 +55,36 @@
   }
   &-about {
     .--cnt {
-      padding-top: fluid(24, 32);
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--gutter-lg);
+      gap: var(--gutter-md);
+      @include mq(lg) {
+        grid-template-columns: 1fr;
+        gap: var(--gutter-sm);
+      }
     }
     .--img {
+      @include mq(lg) {
+        @include img-auto-cover(62.5%);
+      }
       img {
+        width: 100%;
         height: 100%;
       }
     }
     &-card {
+      background: #fafafa;
+      width: 50%;
+      padding: fluid(16, 40);
+      @include mq(sm) {
+        width: 100%;
+      }
       &-wrap {
         display: flex;
         gap: fluid(12, 16);
-        margin-top: fluid(36, 48);
+        margin-top: fluid(16, 48);
       }
-      background: #fafafa;
-      width: 50%;
-      padding: fluid(28, 40);
+
       > div {
         display: flex;
         align-items: center;
@@ -88,6 +108,9 @@
         grid-template-columns: repeat(3, 1fr);
         gap: var(--gutter-sm);
         text-align: center;
+        @include mq(md) {
+          grid-template-columns: 1fr;
+        }
         li {
           @include flex-center();
           flex-direction: column;
@@ -129,6 +152,9 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: var(--gutter-sm);
+        @include mq(md) {
+          grid-template-columns: 1fr;
+        }
         li {
           overflow: hidden;
           position: relative;
@@ -139,7 +165,11 @@
               }
             }
             figure {
+              @include img-auto-cover(62.5%);
+
               > img {
+                width: 100%;
+                height: 100%;
                 transition: ease all 0.3s;
               }
               > div {
@@ -162,14 +192,32 @@
       display: grid;
       grid-template-columns: 4fr 8fr;
       gap: var(--gutter-md);
+      margin-top: 0;
+      @include mq(md) {
+        grid-template-columns: 1fr;
+      }
       .left {
         position: sticky;
         top: var(--header-height);
         height: 48rem;
+        @include mq(md) {
+          height: auto;
+          position: static;
+        }
+      }
+      .right {
+        legend {
+          @include mq(md) {
+            display: none;
+          }
+        }
       }
     }
     &-info {
       margin-top: fluid(24, 36);
+      @include mq(md) {
+        display: none;
+      }
       ul {
         li {
           display: flex;

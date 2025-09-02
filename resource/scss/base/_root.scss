@@ -3,9 +3,9 @@
 $theme-colors: $theme-colors-light;
 
 :root {
-  --base-font-size: #{fluid(14, 16)};
+  --base-font-size: #{fluid(12, 16)};
 
-  --base-line-height: 1.618;
+  --base-line-height: 1.41;
 
   --base-letter-spacing: 0.05rem;
 
@@ -17,11 +17,11 @@ $theme-colors: $theme-colors-light;
   --backdrop-z-index: 500;
   --top-btn-z-index: 1000;
 
-  --gutter-lg: #{fluid(48, 72)};
-  --gutter-md: #{fluid(24, 48)};
-  --gutter-sm: #{fluid(18, 24)};
+  --gutter-lg: #{fluid(36, 72)};
+  --gutter-md: #{fluid(20, 48)};
+  --gutter-sm: #{fluid(12, 24)};
 
-  --input-height: #{fluid(36, 54)};
+  --input-height: #{fluid(40, 54)};
 
   @each $key, $val in $font-familys {
     --family-#{'#{$key}'}: #{$val}, sans-serif;

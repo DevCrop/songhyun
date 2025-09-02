@@ -33,7 +33,6 @@ textarea {
   select,
   textarea {
     background: none;
-    padding: 0.8rem 1.6rem;
     width: 100%;
     height: fluid(36, 60);
     border-bottom: 1px solid var(--clr-border-white-strong);
@@ -44,7 +43,7 @@ textarea {
   }
 
   textarea {
-    height: fluid(240, 320);
+    height: fluid(160, 320);
     display: block;
   }
 
@@ -64,7 +63,9 @@ textarea {
   max-width: 420px;
   border-bottom: 1px solid var(--clr-border-default);
   overflow: hidden;
-
+  @include mq(sm) {
+    max-width: none;
+  }
   input {
     flex: 1;
     padding: 0;
@@ -99,12 +100,6 @@ textarea {
       pointer-events: none;
     }
   }
-}
-
-.no-form-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--gutter-sm);
 }
 
 .no-form-container {
@@ -218,6 +213,11 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  @include mq(sm) {
+    flex-direction: column;
+    gap: var(--gutter-md);
+    align-items: flex-start;
+  }
 }
 .no-form-captcha {
   display: flex;

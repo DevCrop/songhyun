@@ -1,5 +1,9 @@
+let lenis; // 전역
+
 document.addEventListener("DOMContentLoaded", () => {
   AOS.init();
+
+  lenis = initLenis();
 
   gsap.registerPlugin(ScrollTrigger);
   initHeader();
@@ -9,7 +13,53 @@ document.addEventListener("DOMContentLoaded", () => {
   dropdown();
   formHandler();
   initFaq();
+  initTopButton(lenis);
 });
+
+function initLenis() {
+  const lenisInstance = new Lenis({
+    autoRaf: true,
+  });
+
+  return lenisInstance;
+}
+
+function initTopButton(lenis) {
+  const topBtn = document.querySelector(".no-top-btn button");
+  const btnWrapper = document.querySelector(".no-top-btn");
+
+  if (!btnWrapper || !topBtn) return; // 요소 없으면 실행 안 함
+
+  // scroll 상태를 업데이트하는 함수
+  const updateVisibility = (scroll) => {
+    if (scroll <= 0) {
+      btnWrapper.classList.add("hidden");
+    } else {
+      btnWrapper.classList.remove("hidden");
+    }
+  };
+
+  // 최초 로드 시 초기 상태 검사
+  if (lenis) {
+    updateVisibility(lenis.scroll || 0); // lenis의 현재 스크롤 값 사용
+  } else {
+    updateVisibility(window.scrollY || 0); // fallback
+  }
+
+  // scroll 이벤트 감지해서 hidden 클래스 토글
+  lenis.on("scroll", ({ scroll }) => {
+    updateVisibility(scroll);
+  });
+
+  // TOP 버튼 클릭 이벤트
+  topBtn.addEventListener("click", () => {
+    if (lenis) {
+      lenis.scrollTo(0, { offset: 0, immediate: false });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" }); // fallback
+    }
+  });
+}
 
 function initHeader() {
   const root = document.getElementById("header");
@@ -111,7 +161,7 @@ function initProductViewSwiper() {
   if (!mainEl || !thumbEl) return;
 
   const thumbSwiper = new Swiper(thumbEl, {
-    spaceBetween: 10,
+    spaceBetween: 12,
     slidesPerView: 3,
     freeMode: true,
     watchSlidesProgress: true,
@@ -148,6 +198,7 @@ function initShowRoomSwiper() {
     },
 
     breakpoints: {
+      321: { slidesPerView: 1, spaceBetween: 16 },
       640: { slidesPerView: 1.5, spaceBetween: 16 },
       1024: { slidesPerView: 2, spaceBetween: 20 },
       1440: { slidesPerView: 2.3, spaceBetween: 24 },

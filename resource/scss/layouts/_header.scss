@@ -17,10 +17,13 @@
   }
   &.normal {
     background: transparent;
+    border-bottom: 1px solid var(--clr-border-default);
     a {
       color: var(--clr-text-title);
     }
-    border-bottom: 1px solid var(--clr-border-default);
+    .no-header-btn span {
+      background: #000;
+    }
     .logo-brand {
       opacity: 1;
       visibility: visible;

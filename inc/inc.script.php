@@ -32,6 +32,7 @@
 
 <script src="<?= $ROOT ?>/resource/vendor/gsap/scrollTrigger.min.js"></script>
 
+<script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
 
 <!-- RESOURCE -->
 

@@ -116,7 +116,7 @@
 
                                 <div class="no-form-control">
                                     <label for="area">
-                                        설치 지역 <span class="text-primary-800">*</span>
+                                        설치 지역 <span class="--require-symbol">*</span>
                                     </label>
                                     <div class="dropdown" tabindex="1">
                                         <div class="select">

@@ -105,7 +105,14 @@
   align-items: center;
   gap: fluid(8, 12);
   z-index: 999;
-
+  transition: ease all 0.3s;
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
   a,
   button {
     width: fluid(40, 64);

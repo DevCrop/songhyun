@@ -73,10 +73,19 @@ $faqs = [
     <section class="no-sub-faq no-section-md">
         <div class="no-container-xl">
             <div class="--cnt-wrap">
-                <div class="--section-sub-title">
-                    <h2 class="f-heading-3">FAQ's</h2>
+                <div class="--section-title-with-button">
+                    <hgroup>
+                        <h2 class="f-heading-3 clr-text-title">FAQ || 자주 묻는 질문</h2>
+                    </hgroup>
+
                 </div>
                 <div class="--cnt">
+                    <div class="left">
+                        <h4 class="f-heading-4 --semibold">
+                            미건 시스템은 전국적으로 <br>
+                            AS센터를
+                            보유하고 있습니다.</h4>
+                    </div>
                     <!-- --cnt 내부 -->
                     <div class="faq">
 
