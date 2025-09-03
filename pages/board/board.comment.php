@@ -40,46 +40,26 @@ try {
 
 <div class="no-view-content editor">
     <div class="no_comment_wrap">
+
+        <div class="no_comment_input">
+            <div class="no_comment_input_top">
+                <input type="text" id="write_name" name="write_name" class="input_mr" placeholder="name">
+            </div>
+
+            <div class="no_comment_input_mid">
+                <textarea id="comment_contents" name="comment_contents" placeholder="content"></textarea>
+            </div>
+
+            <a href="javascript:void(0)" onclick="doCommentSave(0);" title="댓글 등록" class="link-primary md-w-100">
+                댓글 등록
+            </a>
+
+        </div>
+
+        <!-- Display the number of registered comments -->
+        <span class="no_written">등록된 댓글(<b><?= htmlspecialchars($comment_count) ?></b>)</span>
+
         <?php
-        // Check if the user has permission to comment
-        if ($board_info[0]['comment_yn'] === "Y" && $role_info[0]['role_comment'] === "Y") {
-        ?>
-            <span class="no_chat"><i class="ri-wechat-2-line"></i>Comments</span>
-
-            <div class="no_comment_input">
-                <div class="no_comment_input_top">
-                    <input type="text" id="write_name" name="write_name" class="input_mr" placeholder="name">
-                </div>
-
-                <div class="no_comment_input_mid">
-                    <textarea id="comment_contents" name="comment_contents" placeholder="content"></textarea>
-                </div>
-
-                <div class="no_comment_input_bot">
-                    <div class="no_comment_captcha">
-                        <div class="no_comment_captcha_img">
-                            <img src="/inc/lib/captcha.n.php" id="captcha">
-                        </div>
-                        <i class="ri-restart-line no_comment_reload" onClick="captchaReload();" alt="reload" title="reload"></i>
-                        <input type="text" class="no_comment_cap_input" id="r_captcha" name="r_captcha" maxlength="5">
-                    </div>
-                    <div class="no_comment_up">
-                        <a href="javascript:void(0)" onClick="doCommentSave(<?= htmlspecialchars($NO_USR_LEV) ?>);" title="save">save</a>
-                    </div>
-                </div>
-            </div> <!-- no_comment_input -->
-
-        <?php } else { ?>
-            <!-- Comment posting permission denied message (currently commented out) -->
-            <!-- <textarea name="" rows="" cols="">댓글 등록 권한이 없습니다.</textarea>
-            <a href="javascript:void(0)" title="댓글 등록" class="no_comment_btn">등록</a> -->
-        <?php } ?>
-    </div> <!-- no_comment_wrap -->
-
-    <!-- Display the number of registered comments -->
-    <span class="no_written">등록된 댓글(<b><?= htmlspecialchars($comment_count) ?></b>)</span>
-
-    <?php
     // Fetch and display each comment
     while ($v = $stmt->fetch(PDO::FETCH_ASSOC)) {
     ?>
@@ -87,13 +67,16 @@ try {
             <div class="no_answer_box">
                 <div class="no_answer_txt">
                     <span class="no_answer_name"><?= htmlspecialchars($v['write_name']) ?></span>
-                    <span class="no_answer_date"><?= getChangeDate($v['regdate'], "Y.m.d") ?></span>
+                    <span
+                        class="no_answer_date"><?= $v['regdate'] ? date('Y.m.d', strtotime($v['regdate'])) : '' ?></span>
+
                     <!-- MODIFY, DELETE BUTTONS -->
                     <?php if (($v['user_no'] == $NO_USR_NO) && ($v['isAdmin'] === "N")) { ?>
-                        <a href="javascript:void(0)" onClick="doCommentDelete(<?= htmlspecialchars($v['no']) ?>);" title="delete" class="no_answer_del">delete</a>
+                    <a href="javascript:void(0)" onClick="doCommentDelete(<?= htmlspecialchars($v['no']) ?>);"
+                        title="delete" class="no_answer_del">delete</a>
                     <?php } elseif ($v['user_no'] == -1) { ?>
-                        <!-- Secret delete option for admin -->
-                        <!-- <a href="javascript:void(0)" onClick="doCommentDeleteSecret(<?= htmlspecialchars($v['no']) ?>);" title="delete" class="no_answer_del">delete</a> -->
+                    <!-- Secret delete option for admin -->
+                    <!-- <a href="javascript:void(0)" onClick="doCommentDeleteSecret(<?= htmlspecialchars($v['no']) ?>);" title="delete" class="no_answer_del">delete</a> -->
                     <?php } ?>
                 </div>
                 <p>
@@ -101,7 +84,7 @@ try {
                 </p>
             </div>
         </div>
-    <?php
+        <?php
     }
     ?>
-</div>
+    </div>

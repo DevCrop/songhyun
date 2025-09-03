@@ -1,16 +1,13 @@
 </head>
 
 <?php
-    $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+$path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 
-    if (stripos($path, 'view') !== false) {
-        $pageType = 'view';
-    } elseif (strpos($path, '/pages/') !== false || rtrim($path, '/') === '/pages') {
-        $pageType = 'sub';
-    } else {
-        $pageType = 'main';
-    }
-    ?>
+// 'view' 케이스 제거: /pages/ 하위면 'sub', 그 외는 'main'
+$pageType = (strpos($path, '/pages/') !== false || rtrim($path, '/') === '/pages')
+    ? 'sub'
+    : 'main';
+?>
 
 <body data-page="<?= $pageType ?>">
     <div class="no-backdrop" id="no-backdrop"></div>

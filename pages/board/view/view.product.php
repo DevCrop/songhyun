@@ -49,8 +49,8 @@ foreach ($specGroups as $section => $indices) {
 
 
 ?>
-<div class="no-sub no-sub-view">
-    <section class="no-sub-product-view ">
+<div class="no-sub no-sub-view ">
+    <section class="no-sub-product-view no-section-md">
         <div class="no-container-xl">
             <h2 class="f-heading-2">
                 <?=$data['manage_title']?> <?=$data['title']?>

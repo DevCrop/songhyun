@@ -111,11 +111,10 @@ $notices = [
                 </div>
 
                 <div class="no-write-btn">
-                    <a href="#" class="no-btn-primary">
+                    <a href="<?=$ROOT?>/pages/board/board.write.php" class="no-btn-primary">
                         자세히 보기
                     </a>
                 </div>
-
 
                 <nav class="no-pagination" aria-label="페이지 네비게이션">
                     <a href="#" class="--arrow" aria-label="첫 페이지">«</a>

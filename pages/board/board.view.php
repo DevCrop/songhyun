@@ -61,7 +61,25 @@ if (!isset($_SESSION['nb_board_view_count'])) {
 
 // 게시판 제목 및 목록 페이지 URL 생성
 $board_title = $board_info[0]['title'] ?? '게시판';
-$go_to_list = "./board.list.php?board_no=" . $board_no . "&RtsearchKeyword=" . urlencode($searchKeyword) . "&RtsearchColumn=" . urlencode($searchColumn) . "&page=" . $page;
+
+
+// 권한 플래그
+$canEdit   = ($role_info[0]['role_edit']   ?? 'N') === 'Y';
+$canDelete = ($role_info[0]['role_delete'] ?? 'N') === 'Y';
+
+// 글/게시판 식별자
+$boardNo = (int)($data['board_no'] ?? ($_REQUEST['board_no'] ?? 0));
+$postNo  = (int)($data['no']       ?? ($_REQUEST['no']       ?? 0));
+$isSecret = (($data['is_secret'] ?? 'N') === 'Y');
+
+// 목적지 URL
+$editUrl = $isSecret
+    ? 'board.confirm.php?' . http_build_query(['mode'=>'edit',   'board_no'=>$boardNo, 'no'=>$postNo])
+    : 'board.write.php?'   . http_build_query(['mode'=>'edit',   'board_no'=>$boardNo, 'no'=>$postNo]);
+
+$deleteUrl = 'board.confirm.php?' . http_build_query(['mode'=>'delete', 'board_no'=>$boardNo, 'no'=>$postNo]);
+
+
 
 ?>
 
@@ -74,6 +92,7 @@ $go_to_list = "./board.list.php?board_no=" . $board_no . "&RtsearchKeyword=" . u
 
 <!-- Header -->
 <?php include_once $STATIC_ROOT . '/inc/layouts/header.php'; ?>
+<?php include_once $STATIC_ROOT . '/inc/shared/sub.visual.php'; ?>
 
 <main>
     <form id="frm" name="frm" method="post">
@@ -88,6 +107,25 @@ $go_to_list = "./board.list.php?board_no=" . $board_no . "&RtsearchKeyword=" . u
 				include_once $STATIC_ROOT."/pages/board/view/view.product.php";
 			}
         ?>
+
+        <?php
+			if ($board_no == 24) { 
+				include_once $STATIC_ROOT."/pages/board/view/view.default.php";
+			}
+        ?>
+
+
+        <div class="no-actions">
+            <a href="board.list.php?<?= http_build_query(['board_no' => $boardNo]) ?>"
+                class="no-btn-primary no-btn-inquiry">목록</a>
+            <?php if ($canEdit): ?>
+            <a href="<?= htmlspecialchars($editUrl, ENT_QUOTES) ?>" class="no-btn-secondary no-btn-inquiry">수정</a>
+            <?php endif; ?>
+
+            <?php if ($canDelete): ?>
+            <a href="<?= htmlspecialchars($deleteUrl, ENT_QUOTES) ?>" class="no-btn-primary no-btn-danger">삭제</a>
+            <?php endif; ?>
+        </div>
 
     </form>
 </main>

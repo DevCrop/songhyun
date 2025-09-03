@@ -41,6 +41,30 @@
       }
     }
   }
+  &-write {
+    form {
+      background: #fafafa;
+      padding: 2.4rem;
+    }
+    input,
+    textarea {
+      border-bottom: 1px solid #000;
+      color: #222;
+    }
+    .no-form-captcha figure {
+      background: #222;
+      border: 1px solid transparent;
+    }
+    .no-form-captcha button {
+      background: #333;
+    }
+    .no-form-check button {
+      color: #333;
+    }
+    .no-form-check input[id="check"]:checked + label {
+      background: url("/resource/images/icon/check_black.svg");
+    }
+  }
   &-ceo {
     background: #000e1a;
     color: #fff;
@@ -257,7 +281,6 @@
     }
   }
   &-view {
-    margin-top: calc(var(--header-height) + fluid(64, 128));
     .--cnt {
       display: grid;
       grid-template-columns: 4fr 8fr;
@@ -754,4 +777,21 @@
   display: flex;
   justify-content: flex-end;
   margin-top: fluid(16, 24);
+}
+
+.no-view {
+  &-meta {
+    display: flex;
+    align-items: center;
+    gap: fluid(8, 16);
+    span {
+      display: flex;
+      align-items: center;
+      gap: fluid(4, 8);
+    }
+  }
+  &-body {
+    padding-bottom: fluid(24, 48);
+    border-bottom: 1px solid var(--clr-border-default);
+  }
 }

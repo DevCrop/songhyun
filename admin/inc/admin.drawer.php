@@ -26,14 +26,6 @@ $menus = [
             ['title' => '게시글 관리', 'url' => 'board/board.list.php'],
         ]
     ],
-    3 => [
-        'key' => 'products',
-        'title' => '제품 관리',
-        'icon' => 'fa-mug-saucer',
-        'url'  => '/admin/pages/products/index.php',
-        'subs' => []
-        
-    ],
     4 => [
      
         'key' => 'design',

@@ -13,6 +13,7 @@ if ($cur_gnb === '회사 소개') {
 
 $bg_url = $img_path !== '' ? "/resource/images/sub/sub_visual_img_{$img_path}.jpg" : '';
 $bg_temp_url = "/resource/images/sub/sub_visual_img_1.jpg";
+
 ?>
 
 <!--
@@ -23,7 +24,6 @@ $bg_temp_url = "/resource/images/sub/sub_visual_img_1.jpg";
         </h2>
     </div>
 </section>-->
-
 
 <section class="no-sub-visual" style="background-image: url('<?=$bg_temp_url?>');">
     <div class="no-container-xl">

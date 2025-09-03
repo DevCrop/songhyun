@@ -1,76 +1,75 @@
-<?php
-	if ($board_no == 10) {
-?>
+    <section class="no-sub-notice no-section-md">
+        <div class="no-container-xl">
+            <div class="--section-title-with-search">
+                <hgroup>
+                    <h2 class="f-heading-3 clr-text-title">제품 문의</h2>
+                </hgroup>
 
-<main>
-    <section class="sub-notice">
-        <div class="container-xl">
-            <hgroup class="sub-title">
-                <h2>공지사항</h2>
-                <span></span>
-            </hgroup>
+                <div class="no-form-search ">
+                    <input type="text" name="searchKeyword" id="searchKeyword" placeholder="검색어를 입력해주세요.">
+                    <button type="button" class="" aria-label="search" onclick="doSearch();">
+                        <i class="fa-light fa-magnifying-glass" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
 
-            <article class="no-article">
-                <div class="opt_top">
-                    <div class="search-box">
-                        <input type="search" name="searchKeyword" placeholder="검색어를 입력해주세요.">
-                        <button type="button" aria-label="search" onclick="doSearch();">
-                            <i class="fa-light fa-magnifying-glass" style="color: #0c0c0c;"></i>
-                        </button>
-                    </div>
+            <div class="--cnt">
+                <!-- --cnt 내부 -->
+                <div class="notice">
+                    <table class="notice">
+                        <colgroup>
+                            <col style="width: auto;" />
+                            <col />
+                            <col />
+                        </colgroup>
+                        <thead>
+                            <tr class="">
+                                <th class="notice-head notice-title f-body-2">제목</th>
+                                <th class="notice-head notice-date f-body-2">작성일</th>
+                                <th class="notice-head notice-views f-body-2">조회수</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($arrResultSet as $row): 
+                            ?>
+                            <tr class="notice-row">
+                                <td class="notice-cell notice-title">
+                                    <a class="f-body-1 --semibold"
+                                        href="<?=$ROOT?>/pages/board/board.confirm.php?mode=view&board_no=<?=$board_no?>&no=<?=$row['no']?>">
+                                        <?= htmlspecialchars($row['title']) ?>
+                                    </a>
+                                </td>
+                                <td class="notice-cell notice-date ">
+                                    <time datetime="<?= $row['date'] ?>">
+                                        <?= date("Y-m-d", strtotime($row['date'])) ?>
+                                    </time>
+                                </td>
+                                <td class="notice-cell notice-views">
+                                    <?= number_format($row['views']) ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
                 </div>
 
-                <ul class="notice-list">
-                    <?php
-                    // Reverse the array to display latest items first
-                    $reversedArrResultSet = array_reverse($arrResultSet);
+                <div class="no-write-btn">
+                    <a href="<?=$ROOT?>/pages/board/board.write.php?board_no=<?=$board_no?>" class="no-btn-primary">
+                        자세히 보기
+                    </a>
+                </div>
 
-                    // Iterate over the reversed result set
-                    foreach ($reversedArrResultSet as $k => $v) { 
-                        $title = $v['title'];
-                        
-                        // Determine link based on secret status
-                        if ($v['is_secret'] === "Y") {
-                            if ($_SESSION['board_secret_confirmed_' . $v['no']] === "Y") {
-                                $link = "./board.view.php?board_no=$board_no&no={$v['no']}&searchKeyword=" . base64_encode($searchKeyword) . "&searchColumn=" . base64_encode($searchColumn) . "&page=$page&category_no=$category_no";
-                            } else {
-                                $link = "./board.confirm.php?mode=view&board_no=$board_no&no={$v['no']}&searchKeyword=" . base64_encode($searchKeyword) . "&searchColumn=" . base64_encode($searchColumn) . "&page=$page&returnUrl=/pages/sub4/sub_inquiry_view.php";
-                            }
-                        } else {
-                            $link = "./board.view.php?board_no=$board_no&no={$v['no']}&searchKeyword=" . base64_encode($searchKeyword) . "&searchColumn=" . base64_encode($searchColumn) . "&page=$page&category_no=$category_no";
-                        }
+                <nav class="no-pagination" aria-label="페이지 네비게이션">
+                    <a href="#" class="--arrow" aria-label="첫 페이지">«</a>
+                    <a href="#" class="--arrow" aria-label="이전 페이지">‹</a>
 
-                        // Set display values for notice or regular items
-                        $numZone = "";
-                        $numZoneName = "";
-                        if ($v['is_notice'] === "Y") {
-                            $numZone = "<span class='notice'>공지</span>";
-                            $numZoneName = "";
-                        } else {
-                            $numZoneName = $rnumber;
-                        }
-                    ?>
-                        <li>
-                            <a href="<?= $link ?>">
-                                <span class="num"><?= $numZoneName ?><?= $numZone ?></span>
-                                <div class="wrap">
-                                    <h3><?= $title ?></h3>
-                                    <p class="date"><?= date("Y.m.d", strtotime($v['regdate'])) ?></p>
-                                </div>
-                            </a>
-                        </li>
-                    <?php
-                        $rnumber--;
-                    }
-                    ?>
-                </ul>
+                    <a href="#">1</a>
+                    <a href="#" class="active">2</a>
+                    <a href="#">3</a>
+                    <a href="#" class="--arrow" aria-label="다음 페이지">›</a>
+                    <a href="#" class="--arrow" aria-label="마지막 페이지">»</a>
+                </nav>
 
-				<?php include_once $STATIC_ROOT."/pages/board/components/pagination.php"; ?>
-            </article>
-        </div>
+            </div>
     </section>
-</main>
-
-<?php
-	}
-?>
