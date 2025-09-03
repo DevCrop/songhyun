@@ -138,32 +138,27 @@
                                 </div>
                                 <!-- admin-block -->
 
-                                <!-- Extra Fields based on boardManage_info -->
                                 <?php
-								$textarea_fields = [11, 12, 13, 14, 15];
-								for ($i = 1; $i <= 15; $i++) {
-									$extra_field_key = 'extra_match_field' . $i;
-									$extra_field = $boardManage_info[0][$extra_field_key] ?? null;
-									if ($extra_field) { ?>
+                                for ($i = 1; $i <= 30; $i++) {
+                                    $extra_field_key = 'extra_match_field' . $i;
+                                    $extra_field = $boardManage_info[0][$extra_field_key] ?? null;
+                                    $extra_value = $data['extra' . $i] ?? null;
+
+                                    if (!empty($extra_field) && !empty($extra_value)) { ?>
                                 <div class="no-admin-block extra_fields">
                                     <h3 class="no-admin-title">
                                         <label for="extra<?= $i ?>"><?= htmlspecialchars($extra_field) ?></label>
                                     </h3>
                                     <div class="no-admin-content">
-                                        <?php if (in_array($i, $textarea_fields)) { ?>
-                                        <textarea style="height: 15rem" name="extra<?= $i ?>" id="extra<?= $i ?>"
-                                            class="no-input--detail"
-                                            placeholder="<?= htmlspecialchars($extra_field) ?>"><?= htmlspecialchars($data['extra' . $i]) ?></textarea>
-                                        <?php } else { ?>
                                         <input type="text" name="extra<?= $i ?>" id="extra<?= $i ?>"
-                                            value="<?= htmlspecialchars($data['extra' . $i]) ?>"
-                                            class="no-input--detail"
+                                            value="<?= htmlspecialchars($extra_value) ?>" class="no-input--detail"
                                             placeholder="<?= htmlspecialchars($extra_field) ?>" />
-                                        <?php } ?>
                                     </div>
                                 </div>
-                                <?php } } ?>
-                                <!-- admin-block -->
+                                <?php }
+                                } ?>
+
+
 
                                 <div class="no-admin-block no-admin-pos">
                                     <h3 class="no-admin-title">
@@ -185,7 +180,7 @@
                                             class="no-input--detail" />
                                     </div>
                                 </div>
-								
+
                                 <div class="no-admin-block">
                                     <h3 class="no-admin-title"><label for="direct_url">유튜브 링크 코드</label></h3>
                                     <div class="no-admin-content">
@@ -267,6 +262,45 @@
                                     </div>
                                 </div>
                                 <!-- admin-block -->
+                                <div class="no-admin-block">
+                                    <h3 class="no-admin-title"><label for="post_description">게시물 설명글</label></h3>
+                                    <div class="no-admin-content">
+                                        <textarea name="post_description" id="post_description"
+                                            class="no-textarea--detail" rows="6"
+                                            placeholder="게시물 설명을 입력하세요."><?= $data['post_description'] ?? '' ?></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="no-admin-block">
+                                    <h3 class="no-admin-title"><label for="feature_list">특징 리스트</label></h3>
+                                    <div class="no-admin-content">
+                                        <textarea name="feature_list" id="feature_list" class="no-textarea--detail"
+                                            rows="6"
+                                            placeholder="줄바꿈으로 구분하여 특징을 입력하세요."><?= $data['feature_list'] ?? '' ?></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="no-admin-block">
+                                    <h3 class="no-admin-title"><label for="feature_description">특징 설명글</label></h3>
+                                    <div class="no-admin-content">
+                                        <textarea name="feature_description" id="feature_description"
+                                            class="no-textarea--detail" rows="6"
+                                            placeholder="특징에 대한 상세 설명을 입력하세요."><?= $data['feature_description'] ?? '' ?></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="no-admin-block">
+                                    <h3 class="no-admin-title"><label for="tech_title_description">기술력 타이틀 및 설명글</label>
+                                    </h3>
+                                    <div class="no-admin-content">
+                                        <textarea name="tech_title_description" id="tech_title_description"
+                                            class="no-textarea--detail" rows="6"
+                                            placeholder="기술력 타이틀과 설명을 함께 입력하세요."><?= $data['tech_title_description'] ?? '' ?></textarea>
+                                    </div>
+                                </div>
+
+
+
 
 
                                 <!-- 파일 첨부 -->

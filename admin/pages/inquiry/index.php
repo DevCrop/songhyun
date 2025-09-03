@@ -1,104 +1,78 @@
 <?php
 include_once "../../../inc/lib/base.class.php";
 
-$pageName = "공진단 · 한약 상담";
-$depthnum = 11;
-$pagenum  = 2;
+$pageName = " 문의";
+$depthnum = 7;
 
 $db = DB::getInstance();
 
 /* =============================
  * 페이지네이션 기본값
  * ============================= */
-$perpage      = 10; // 한 페이지 당 목록 수
-$listCurPage  = isset($_POST['page']) ? (int)$_POST['page'] : (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+$perpage     = 10; // 페이지당 개수
+$listCurPage = isset($_POST['page']) ? (int)$_POST['page'] : (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 if ($listCurPage < 1) $listCurPage = 1;
-$pageBlock    = 2;   // 좌우 페이지 넘버 표시 개수
-$offset       = ($listCurPage - 1) * $perpage;
+$pageBlock   = 2;   // 좌우 페이지 번호 개수
+$offset      = ($listCurPage - 1) * $perpage;
 
 /* =============================
- * 지점 목록
+ * GET 필터 파라미터
  * ============================= */
-$branchesStmt = $db->prepare("SELECT id, name_kr FROM nb_branches WHERE id IN (2,3,4) ORDER BY id ASC");
-$branchesStmt->execute();
-$branches = $branchesStmt->fetchAll(PDO::FETCH_ASSOC);
+$searchColumn   = isset($_GET['searchColumn'])   ? trim($_GET['searchColumn'])   : '';
+$searchKeyword  = isset($_GET['searchKeyword'])  ? trim($_GET['searchKeyword'])  : '';
 
 /* =============================
- * 필터 GET 변수
- * ============================= */
-$branch_id     = isset($_GET['branch_id'])   ? trim($_GET['branch_id'])   : '';
-$inquiry_type  = isset($_GET['inquiry_type'])? trim($_GET['inquiry_type']): '';
-$searchColumn  = isset($_GET['searchColumn'])? trim($_GET['searchColumn']): '';
-$searchKeyword = isset($_GET['searchKeyword'])? trim($_GET['searchKeyword']) : '';
-
-/* =============================
- * WHERE 조건 구성
+ * WHERE 절 구성
  * ============================= */
 $where  = "WHERE 1=1";
 $params = [];
 
-if ($branch_id !== '') {
-    $where .= " AND si.branch_id = :branch_id";
-    $params[':branch_id'] = (int)$branch_id;
-}
-if ($inquiry_type !== '') {
-    $where .= " AND si.inquiry_type = :inquiry_type";
-    $params[':inquiry_type'] = (int)$inquiry_type;
-}
 if ($searchColumn !== '' && $searchKeyword !== '') {
-    $allowedColumns = ['name','phone'];
+    $allowedColumns = ['name', 'phone'];
     if (in_array($searchColumn, $allowedColumns, true)) {
-        $where .= " AND si.{$searchColumn} LIKE :searchKeyword";
+        $where .= " AND r.`{$searchColumn}` LIKE :searchKeyword";
         $params[':searchKeyword'] = "%{$searchKeyword}%";
     }
 }
 
 /* =============================
- * 총 개수 조회 -> 전체 페이지 수
+ * 총 개수 → 전체 페이지 수
  * ============================= */
 $countSql = "
-    SELECT COUNT(*) 
-    FROM nb_herb_inquiries si
-    LEFT JOIN nb_branches b ON si.branch_id = b.id
+    SELECT COUNT(*)
+    FROM nb_request r
     {$where}
 ";
 $countStmt = $db->prepare($countSql);
 $countStmt->execute($params);
 $totalCount = (int)$countStmt->fetchColumn();
+
 $Page = (int)ceil($totalCount / $perpage);
-// 현재 페이지가 범위를 넘으면 보정
 if ($Page > 0 && $listCurPage > $Page) {
     $listCurPage = $Page;
     $offset = ($listCurPage - 1) * $perpage;
 }
 
 /* =============================
- * 실제 목록 조회 (LIMIT)
+ * 리스트 조회 (LIMIT)
  * ============================= */
 $sql = "
-    SELECT 
-        si.id, si.branch_id, si.name, si.phone, si.gender, si.birth,
-        si.consult_time, si.inquiry_type, si.created_at,
-        si.is_confirmed,                     
-        b.name_kr AS branch_label
-    FROM nb_herb_inquiries si
-    LEFT JOIN nb_branches b ON si.branch_id = b.id
+    SELECT *
+    FROM nb_request r
     {$where}
-    ORDER BY si.created_at DESC
+    ORDER BY r.regdate DESC
     LIMIT {$offset}, {$perpage}
 ";
 $stmt = $db->prepare($sql);
 $stmt->execute($params);
-$inquiries = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+$requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 
 
 <!--=====================HEAD========================= -->
 <?php include_once "../../inc/admin.head.php"; ?>
 
-<body data-page="faq">
+<body data-page="inquiry">
     <div class="no-wrap">
 
         <!--=====================HEADER========================= -->
@@ -134,43 +108,6 @@ $inquiries = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <h2 class="no-card-title"><?= $pageName ?> 검색</h2>
                             </div>
                             <div class="no-card-body no-admin-column">
-
-
-                                <!-- 지점 선택 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title">지점</h3>
-                                    <div class="no-admin-content">
-                                        <select name="branch_id" id="branch_category">
-                                            <option value="">전체</option>
-                                            <?php foreach ($branches as $b): ?>
-                                            <option value="<?= $b['id'] ?>"
-                                                <?= ($branch_id ?? '') == $b['id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($b['name_kr']) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- 희망 진료 선택 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title">문의 종류</h3>
-                                    <div class="no-admin-content">
-                                        <select name="inquiry_type" id="inquiry_type">
-                                            <option value="">전체</option>
-                                            <?php foreach ($inquiry_types as $key => $label): ?>
-                                            <option value="<?= $key ?>" <?= $inquiry_type == $key ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($label) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-
-
-
-
 
 
                                 <!-- 검색어 -->
@@ -219,40 +156,37 @@ $inquiries = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <tr>
                                                 <th>번호</th>
                                                 <th>이름</th>
-                                                <th>성별</th>
-                                                <th>생년월일</th>
+                                                <th>업체명</th>
                                                 <th>연락처</th>
-                                                <th>상담 가능 시간</th>
-                                                <th>문의 종류</th>
-                                                <th>등록일</th>
-												<th>확인 여부</th>
+                                                <th>설치 지역</th>
+                                                <th>문의 일자</th>
+                                                <th>확인 여부</th>
                                                 <th>관리</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if (!empty($inquiries)): ?>
-                                            <?php foreach ($inquiries as $row): ?>
+                                            <?php if (count($requests) > 0): ?>
+                                            <?php foreach ($requests as $request): ?>
                                             <tr>
-                                                <td><?= $row['id'] ?></td>
-                                                <td><?= htmlspecialchars($row['name']) ?></td>
-                                                <td><?= $gender_options[$row['gender']] ?? '미정' ?></td>
-                                                <td><?= htmlspecialchars($row['birth']) ?></td>
-                                                <td><?= htmlspecialchars($row['phone']) ?></td>
-                                                <td><?= $consult_time_options[$row['consult_time']] ?? '미정' ?></td>
-                                                <td><?= $inquiry_types[$row['inquiry_type']] ?? '미정' ?></td>
-                                                <td><?= substr($row['created_at'], 0, 10) ?></td>
-												<td>
-												  <span
-													class="no-btn <?= ((int)$row['is_confirmed'] === 1) ? 'no-btn--notice' : 'no-btn--normal' ?>">
-													<?= htmlspecialchars($is_confirmed[(int)$row['is_confirmed']] ?? '미정', ENT_QUOTES, 'UTF-8') ?>
-												  </span>
-												</td>
+
+                                                <td><?= $request['no'] ?></td>
+                                                <td><?= htmlspecialchars($request['name']) ?></td>
+                                                <td><?= htmlspecialchars($request['company']) ?></td>
+                                                <td><?= htmlspecialchars($request['phone']) ?></td>
+                                                <td><?= $area_categories[$request['area']] ?? '미정' ?></td>
+                                                <td><?= htmlspecialchars($request['regdate']) ?></td>
+                                                <td>
+                                                    <span
+                                                        class="no-btn <?= ((int)$request['is_confirmed'] === 1) ? 'no-btn--notice' : 'no-btn--normal' ?>">
+                                                        <?= htmlspecialchars($is_confirmed[(int)$row['is_confirmed']] ?? '미정', ENT_QUOTES, 'UTF-8') ?>
+                                                    </span>
+                                                </td>
                                                 <td>
                                                     <div class="no-table-role">
                                                         <span class="no-role-btn"><i
                                                                 class="bx bx-dots-vertical-rounded"></i></span>
                                                         <div class="no-table-action">
-                                                            <a href="herb.view.php?id=<?= $row['id'] ?>"
+                                                            <a href="simple.view.php?id=<?= $row['id'] ?>"
                                                                 class="no-btn no-btn--sm no-btn--normal">자세히 보기</a>
                                                         </div>
                                                     </div>
@@ -265,7 +199,6 @@ $inquiries = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             </tr>
                                             <?php endif; ?>
                                         </tbody>
-
 
                                     </table>
                                 </div>

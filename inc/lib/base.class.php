@@ -55,7 +55,7 @@ $BOARD_DEFULAT_BLOCK_SIZE = 10; //������ ī��Ʈ
 
 // /* ��� ���� */
 // /* ����Ʈ�� �ʵ� ���� ���� */
-$NO_EXTRA_FIELDS_COUNT = 15;
+$NO_EXTRA_FIELDS_COUNT = 30;
 
 // /* ���� ��� ���� ��� �Ʒ� ���� ��� */
 

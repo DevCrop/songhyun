@@ -2,7 +2,7 @@
 include_once "../../../inc/lib/base.class.php";
 
 $pageName = "페이지별 SEO ";
-$depthnum = 10;
+$depthnum = 6;
 $pagenum = 3;
 
 try {

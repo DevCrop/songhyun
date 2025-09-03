@@ -1,16 +1,12 @@
 <?php
 include_once "../../../inc/lib/base.class.php";
 
-
 $pageName = "배너";
-$depthnum = 3;
+$depthnum = 4;
 $pagenum = 1;
 
 try {
     $db = DB::getInstance(); 
-    $branches = [];
-    $stmt = $db->query("SELECT * FROM nb_branches WHERE id IN (2,3,4) ORDER BY id ASC");
-    $branches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // ID로 해당 배너 불러오기
     $id = $_GET['id'] ?? null;
@@ -39,6 +35,7 @@ include_once "../../inc/admin.css.php";
 include_once "../../inc/admin.js.php";
 ?>
 
+
 </head>
 
 <body data-page="banner">
@@ -51,7 +48,7 @@ include_once "../../inc/admin.js.php";
             <form id="frm" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="mode" value="update">
                 <input type="hidden" name="id" value="<?=$banner['id']?>">
-				<input type="hidden" name="sort_no" value="<?=$banner['sort_no']?>">
+                <input type="hidden" name="sort_no" value="<?=$banner['sort_no']?>">
                 <section class="no-content">
 
                     <div class="no-toolbar">
@@ -74,22 +71,6 @@ include_once "../../inc/admin.js.php";
                                 <h2 class="no-card-title"><?=$pageName?> 등록</h2>
                             </div>
                             <div class="no-card-body no-admin-column no-admin-column--detail">
-
-                                <!-- 지점 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title"><label for="branch_category">지점</label></h3>
-                                    <div class="no-admin-content">
-                                        <select name="branch_id" id="branch_category">
-                                            <option value="">공통</option>
-                                            <?php foreach ($branches as $branch): ?>
-                                            <option value="<?= $branch['id'] ?>"
-                                                <?= $banner['branch_id'] == $branch['id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($branch['name_kr']) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
 
                                 <!-- 배너 타입 -->
                                 <div class="no-admin-block">

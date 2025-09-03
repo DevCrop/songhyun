@@ -3,7 +3,7 @@
 
     $pageName = "사이트 정보";
 
-    $depthnum = 10; 
+    $depthnum = 6; 
     $pagenum = 1;
 
 	include_once "../../inc/admin.title.php";

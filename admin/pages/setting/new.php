@@ -2,7 +2,7 @@
 include_once "../../../inc/lib/base.class.php";
 
 $pageName = "외부 태그 ";
-$depthnum = 10;
+$depthnum = 6;
 $pagenum = 2;
 
 try {

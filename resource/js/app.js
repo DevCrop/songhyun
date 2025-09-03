@@ -177,6 +177,10 @@ function initProductViewSwiper() {
     thumbs: {
       swiper: thumbSwiper,
     },
+    autoplay: {
+      delay: 3000, // 3초 간격
+      disableOnInteraction: false, // 유저가 클릭해도 자동재생 유지
+    },
   });
 }
 
@@ -250,6 +254,9 @@ function formHandler() {
   }
 
   const reloadingButton = document.getElementById("reloading");
+  if (!reloadingButton) {
+    return;
+  }
   const captchaImg = document.querySelector("#captcha-img");
 
   reloadingButton.addEventListener("click", () => {

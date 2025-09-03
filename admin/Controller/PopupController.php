@@ -12,11 +12,9 @@ try {
 
     $validator = new Validator();
 
-    // INSERT
     if ($mode === 'insert') {
         $data = [
             'title'         => trim($input['title'] ?? ''),
-            'branch_id'     => !empty($input['branch_id']) ? (int)$input['branch_id'] : null,
             'popup_type'    => (int)($input['popup_type'] ?? 0),
             'has_link'      => (int)($input['has_link'] ?? 2),
             'link_url'      => trim($input['link_url'] ?? ''),
@@ -28,16 +26,7 @@ try {
             'is_unlimited'  => (int)($input['is_unlimited'] ?? 1),
         ];
 
-        // ✅ sort_no 자동 처리
-		/*
-        $sortNo = isset($input['sort_no']) && (int)$input['sort_no'] > 0
-            ? (int)$input['sort_no']
-            : PopupModel::getMaxSortNo() + 1;
-
-        $data['sort_no'] = $sortNo;
-*/
         $validator->require('title', $data['title'], '제목');
-        $validator->require('branch_id', $data['branch_id'], '지점');
         $validator->require('popup_type', $data['popup_type'], '팝업 위치');
 
         $image = imageUpload($upload_path, $_FILES['popup_image'] ?? []);
@@ -55,10 +44,9 @@ try {
             exit;
         }
 
-        PopupModel::bumpSortNosOnInsert();              // ← 기존 전부 sort_no + 1
-
-		$data['sort_no'] = 1;                           // ← 새 팝업은 항상 1
-		$result = PopupModel::insert($data);
+        PopupModel::bumpSortNosOnInsert();
+        $data['sort_no'] = 1;
+        $result = PopupModel::insert($data);
 
         echo json_encode([
             'success' => $result,
@@ -67,16 +55,12 @@ try {
         exit;
     }
 
-
-
-    // UPDATE
     if ($mode === 'update') {
         $id = (int)($input['id'] ?? 0);
         if (!$id) throw new Exception("ID가 없습니다.");
 
         $data = [
             'title'         => trim($input['title'] ?? ''),
-            'branch_id'     => !empty($input['branch_id']) ? (int)$input['branch_id'] : null,
             'popup_type'    => (int)($input['popup_type'] ?? 0),
             'has_link'      => (int)($input['has_link'] ?? 2),
             'link_url'      => trim($input['link_url'] ?? ''),
@@ -92,7 +76,6 @@ try {
         $data['sort_no'] = $newSortNo;
 
         $validator->require('title', $data['title'], '제목');
-        $validator->require('branch_id', $data['branch_id'], '지점');
         $validator->require('popup_type', $data['popup_type'], '팝업 위치');
 
         $existing = PopupModel::find($id);
@@ -101,14 +84,12 @@ try {
             exit;
         }
 
-        // ✅ 정렬 충돌 처리
         $oldSortNo = (int)$existing['sort_no'];
         if ($newSortNo !== $oldSortNo && $newSortNo > 0) {
             PopupModel::shiftSortNosForUpdate($oldSortNo, $newSortNo, $id);
         }
 
         $hasNewImage = !empty($_FILES['popup_image']) && $_FILES['popup_image']['error'] !== UPLOAD_ERR_NO_FILE;
-
         if ($hasNewImage) {
             imageDelete($upload_path . '/' . $existing['popup_image']);
             $image = imageUpload($upload_path, $_FILES['popup_image']);
@@ -134,8 +115,6 @@ try {
         exit;
     }
 
-
-    // DELETE
     if ($mode === 'delete') {
         $id = (int)($input['id'] ?? 0);
         if (!$id) throw new Exception("ID가 없습니다.");
@@ -154,7 +133,6 @@ try {
         exit;
     }
 
-    // DELETE ARRAY
     if ($mode === 'delete_array') {
         $ids = json_decode($input['ids'] ?? '[]', true);
 
@@ -178,76 +156,70 @@ try {
         exit;
     }
 
-
-       
     if ($mode === 'sort') {
-    $id = (int)($input['id'] ?? 0);
-    $newNo = (int)($input['new_no'] ?? 0);
+        $id = (int)($input['id'] ?? 0);
+        $newNo = (int)($input['new_no'] ?? 0);
 
-    if (!$id || $newNo <= 0) { // 0 이하는 잘못된 데이터로 처리
-        echo json_encode(['success' => false, 'message' => '잘못된 데이터']);
+        if (!$id || $newNo <= 0) {
+            echo json_encode(['success' => false, 'message' => '잘못된 데이터']);
+            exit;
+        }
+
+        $db = DB::getInstance();
+        $stmt = $db->prepare("SELECT * FROM nb_popups WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        $currentData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$currentData) {
+            echo json_encode(['success' => false, 'message' => '존재하지 않는 항목입니다.']);
+            exit;
+        }
+
+        $oldNo = (int)$currentData['sort_no'];
+
+        if ($oldNo === $newNo) {
+            echo json_encode(['success' => true, 'message' => '변경 없음']);
+            exit;
+        }
+
+        $minSortNo = PopupModel::getMinSortNo();
+        $maxSortNo = PopupModel::getMaxSortNo();
+
+        if ($newNo > $maxSortNo) {
+            echo json_encode(['success' => false, 'message' => '제일 높은 순서의 게시물입니다.']);
+            exit;
+        }
+
+        if ($newNo < $minSortNo) {
+            echo json_encode(['success' => false, 'message' => '제일 낮은 순서의 게시물입니다.']);
+            exit;
+        }
+
+        PopupModel::shiftSortNosForUpdate($oldNo, $newNo, $id);
+
+        $dataToUpdate = [
+            'title'        => $currentData['title'],
+            'popup_type'   => (int)$currentData['popup_type'],
+            'has_link'     => (int)$currentData['has_link'],
+            'link_url'     => $currentData['link_url'],
+            'is_target'    => (int)$currentData['is_target'],
+            'is_active'    => (int)$currentData['is_active'],
+            'description'  => $currentData['description'],
+            'start_at'     => $currentData['start_at'],
+            'end_at'       => $currentData['end_at'],
+            'is_unlimited' => (int)$currentData['is_unlimited'],
+            'popup_image'  => $currentData['popup_image'],
+            'sort_no'      => $newNo,
+        ];
+
+        $updateResult = PopupModel::update($id, $dataToUpdate);
+
+        echo json_encode([
+            'success' => (bool)$updateResult,
+            'message' => $updateResult ? '순서가 변경되었습니다.' : '변경 실패'
+        ]);
         exit;
     }
-
-    $db = DB::getInstance();
-    $stmt = $db->prepare("SELECT * FROM nb_popups WHERE id = :id");
-    $stmt->execute([':id' => $id]);
-    $currentData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$currentData) {
-        echo json_encode(['success' => false, 'message' => '존재하지 않는 항목입니다.']);
-        exit;
-    }
-
-    $oldNo = (int)$currentData['sort_no'];
-
-    if ($oldNo === $newNo) {
-        echo json_encode(['success' => true, 'message' => '변경 없음']);
-        exit;
-    }
-
-    $minSortNo = PopupModel::getMinSortNo();
-    $maxSortNo = PopupModel::getMaxSortNo();
-
-    if ($newNo > $maxSortNo) {
-        echo json_encode(['success' => false, 'message' => '제일 높은 순서의 게시물입니다.']);
-        exit;
-    }
-
-    if ($newNo < $minSortNo) {
-        echo json_encode(['success' => false, 'message' => '제일 낮은 순서의 게시물입니다.']);
-        exit;
-    }
-
-    PopupModel::shiftSortNosForUpdate($oldNo, $newNo, $id);
-
-    $dataToUpdate = [
-        'title'         => $currentData['title'],
-        'branch_id'     => !empty($currentData['branch_id']) ? (int)$currentData['branch_id'] : null,
-        'popup_type'    => (int)$currentData['popup_type'],
-        'has_link'      => (int)$currentData['has_link'],
-        'link_url'      => $currentData['link_url'],
-        'is_target'     => (int)$currentData['is_target'],
-        'is_active'     => (int)$currentData['is_active'],
-        'description'   => $currentData['description'],
-        'start_at'      => $currentData['start_at'],
-        'end_at'        => $currentData['end_at'],
-        'is_unlimited'  => (int)$currentData['is_unlimited'],
-        'popup_image'   => $currentData['popup_image'],
-        'sort_no'       => $newNo,
-    ];
-
-    $updateResult = PopupModel::update($id, $dataToUpdate);
-
-    echo json_encode([
-        'success' => (bool)$updateResult,
-        'message' => $updateResult ? '순서가 변경되었습니다.' : '변경 실패'
-    ]);
-    exit;
-}
-
-
-
 
     echo json_encode(['success' => false, 'message' => '유효하지 않은 요청입니다.']);
     exit;

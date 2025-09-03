@@ -1692,11 +1692,11 @@ html .ui-button.ui-state-disabled:active {
   padding: 2rem 0;
 }
 .no-toolbar-container {
-    padding: 0 3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-	align-items: flex-start;
+  padding: 0 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
 }
 @media (max-width: 768px) {
   .no-toolbar-container {
@@ -1775,10 +1775,10 @@ html .ui-button.ui-state-disabled:active {
   padding-bottom: 3rem;
 }
 .no-flex-stack {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-	flex-direction : row;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: row;
 }
 .no-page-indicator .no-page-title {
   font-size: 1.8rem;
@@ -4341,4 +4341,15 @@ input[type="file"].note-image-input {
 .sort-btn i {
   font-size: 18px;
   pointer-events: none;
+}
+
+.no-list {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+}
+.no-checkbox-form label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }

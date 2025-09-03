@@ -2,7 +2,7 @@
 include_once "../../../inc/lib/base.class.php";
 
 $pageName = "배너";
-$depthnum = 3;
+$depthnum = 4;
 $pagenum = 1;
 
 $db = DB::getInstance();
@@ -13,27 +13,16 @@ $listCurPage = isset($_POST['page']) ? (int)$_POST['page'] : (isset($_GET['page'
 $pageBlock = 2;
 $count = ($listCurPage - 1) * $perpage; // LIMIT offset
 
-// 지점 목록
-$branchesStmt = $db->prepare("SELECT * FROM nb_branches WHERE id IN (2,3,4) ORDER BY id ASC");
-$branchesStmt->execute();
-$branches = $branchesStmt->fetchAll(PDO::FETCH_ASSOC); 
-
 // GET 파라미터 처리
-$branch_id = $_GET['branch_id'] ?? '';
-$banner_type = $_GET['banner_type'] ?? '';
-$active_filter = $_GET['is_active'] ?? '';
-$searchKeyword = $_GET['searchKeyword'] ?? '';
-$start_at = $_GET['start_at'] ?? '';
-$end_at = $_GET['end_at'] ?? '';
+$banner_type    = $_GET['banner_type'] ?? '';
+$active_filter  = $_GET['is_active'] ?? '';
+$searchKeyword  = $_GET['searchKeyword'] ?? '';
+$start_at       = $_GET['start_at'] ?? '';
+$end_at         = $_GET['end_at'] ?? '';
 
 // WHERE 조건 구성
-$where = "WHERE 1=1";
+$where  = "WHERE 1=1";
 $params = [];
-
-if (!empty($branch_id)) {
-    $where .= " AND b.branch_id = :branch_id";
-    $params[':branch_id'] = $branch_id;
-}
 
 if (!empty($banner_type)) {
     $where .= " AND b.banner_type = :banner_type";
@@ -64,7 +53,6 @@ if (!empty($searchKeyword)) {
 $totalSql = "
     SELECT COUNT(*) 
     FROM nb_banners b
-    LEFT JOIN nb_branches br ON b.branch_id = br.id
     $where
 ";
 $totalStmt = $db->prepare($totalSql);
@@ -74,9 +62,8 @@ $Page = ceil($totalCount / $perpage);
 
 // 실제 데이터 조회
 $sql = "
-    SELECT b.*, br.name_kr AS branch_name
+    SELECT b.*
     FROM nb_banners b
-    LEFT JOIN nb_branches br ON b.branch_id = br.id
     $where
     ORDER BY b.sort_no ASC, b.id DESC
     LIMIT {$count}, {$perpage}
@@ -85,6 +72,7 @@ $stmt = $db->prepare($sql);
 $stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 
 <?php include_once "../../inc/admin.head.php"; ?>
@@ -126,22 +114,6 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <h2 class="no-card-title"><?= $pageName ?> 검색</h2>
                             </div>
                             <div class="no-card-body no-admin-column">
-
-                                <!-- 지점 선택 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title">지점</h3>
-                                    <div class="no-admin-content">
-                                        <select name="branch_id" id="branch_category">
-                                            <option value="">전체</option>
-                                            <?php foreach ($branches as $b): ?>
-                                            <option value="<?= $b['id'] ?>"
-                                                <?= ($branch_id ?? '') == $b['id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($b['name_kr']) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
 
 
                                 <!-- 배너 위치 -->
@@ -235,9 +207,9 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
 
                             <div class="no-card-body">
-                             
+
                                 <div class="no-table-option">
-								   <?php if ($role-> canDelete()) : ?>
+                                    <?php if ($role-> canDelete()) : ?>
                                     <ul class="no-table-check-control">
                                         <ul class="no-table-check-control">
                                             <li>
@@ -250,11 +222,11 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     data-action="deleteSelected">선택삭제</a></li>
                                         </ul>
                                     </ul>
-									<?php endif ;?>
-									<span>총 <?=$totalCount?>개</span>	
+                                    <?php endif ;?>
+                                    <span>총 <?=$totalCount?>개</span>
                                 </div>
-                                
-									
+
+
 
                                 <div class="no-table-responsive">
 
@@ -285,7 +257,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         </thead>
                                         <tbody>
                                             <?php if (count($rows) > 0): ?>
-											<?php $no = $count + 1; ?>
+                                            <?php $no = $count + 1; ?>
                                             <?php foreach ($rows as $row):  ?>
                                             <tr>
                                                 <?php if ($role-> canDelete()) : ?>
@@ -331,7 +303,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     </button>
                                                     <button type="button" class="sort-btn" data-id="<?= $row['id'] ?>"
                                                         data-action="down" data-no="<?= $row['sort_no'] - 1 ?>">
-														<i class='bx bx-chevron-up'></i>
+                                                        <i class='bx bx-chevron-up'></i>
                                                     </button>
                                                     <button type="button" class="sort-btn" data-id="<?= $row['id'] ?>"
                                                         data-action="first" data-no="<?= $totalCount ?>">
@@ -339,7 +311,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     </button>
                                                     <button type="button" class="sort-btn" data-id="<?= $row['id'] ?>"
                                                         data-action="last" data-no="1">
-														<i class='bx bx-chevrons-up'></i>
+                                                        <i class='bx bx-chevrons-up'></i>
                                                     </button>
                                                 </td>
 
@@ -370,7 +342,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     </div>
                                                 </td>
                                             </tr>
-											<?php $no++; ?>
+                                            <?php $no++; ?>
                                             <?php endforeach; ?>
                                             <?php else: ?>
                                             <tr>

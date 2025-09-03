@@ -97,14 +97,15 @@ $arrResultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $rnumber     = $totalCnt - (($listCurPage - 1) * $listRowCnt);
 $board_title = $board_info[0]['title'] ?? '';
 
+
 ?>
 
 
 <!-- HTML & PHP Integration -->
 
 <?php include_once $STATIC_ROOT . '/inc/layouts/head.php'; ?>
-<script src="<?= $ROOT ?>/resource/js/sub.js" <?= date('YmdHis') ?> defer></script>
 <?php include_once $STATIC_ROOT . '/inc/layouts/header.php'; ?>
+<?php include_once $STATIC_ROOT . '/inc/shared/sub.visual.php'; ?>
 
 <main>
     <form id="frm" name="frm" method="get" autocomplete='off'>
@@ -116,6 +117,7 @@ $board_title = $board_info[0]['title'] ?? '';
                 case "bbs":  include __DIR__."/skin/skin.list.php"; break;
                 case "gal":   include __DIR__."/skin/skin.gallery.php"; break;
                 case "faq":   include __DIR__."/skin/skin.faq.php"; break;
+                case "pro":   include __DIR__."/skin/skin.product.php"; break;
             }
         ?>
     </form>

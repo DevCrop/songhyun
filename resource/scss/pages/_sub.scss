@@ -139,6 +139,9 @@
       justify-content: space-between;
       margin-top: fluid(18, 24);
       gap: var(--gutter-lg);
+      @include mq(md) {
+        gap: var(--gutter-md);
+      }
       .swiper-pagination {
         position: static;
       }
@@ -152,8 +155,8 @@
       }
       .swiper-button {
         position: static;
-        width: fluid(48, 64);
-        height: fluid(48, 64);
+        width: fluid(40, 64);
+        height: fluid(40, 64);
         border-radius: 5rem;
         border: 1px solid #000;
         color: #000;
@@ -231,7 +234,7 @@
     .product-banner {
       position: relative;
       figure {
-        @include img-auto-cover(48%);
+        @include img-auto-cover(54%);
         img {
           width: 100%;
           height: 100%;
@@ -275,6 +278,7 @@
           max-width: none;
           position: static;
         }
+
         figure {
           @include img-auto-cover(76%);
           img {
@@ -284,13 +288,39 @@
         }
         li {
           background: #fafafa;
+          border: 3px solid transparent;
+
+          img {
+            transition: ease all 0.3s;
+          }
+        }
+        .swiper-slide-thumb-active {
+          border: 3px solid var(--clr-border-default);
+          img {
+            opacity: 0.48;
+          }
         }
       }
       .right {
         .info-block {
         }
         .info-feature {
+          border-top: 2px solid var(--clr-border-strong);
           margin-top: fluid(18, 24);
+          > p {
+            padding: fluid(16, 20) 0;
+            border-bottom: 1px solid var(--clr-border-default);
+            b {
+              font-size: fluid(15, 20);
+              font-weight: 700;
+              color: #111;
+              display: inline-block;
+              margin-bottom: fluid(2, 4);
+              @include mq(md) {
+                display: block;
+              }
+            }
+          }
         }
         .info-wrap {
           display: flex;
@@ -658,7 +688,7 @@
     margin-top: fluid(24, 48);
     margin-bottom: fluid(54, 120);
     figure {
-      @include img-auto-cover(62.5%);
+      @include img-auto-cover(58%);
       img {
         width: 100%;
         height: 100%;
@@ -687,6 +717,10 @@
   @include mq(md) {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--gutter-sm);
+  }
+  @include mq(sm) {
+    grid-template-columns: 1fr;
+    gap: var(--gutter-md);
   }
 }
 

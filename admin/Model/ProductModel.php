@@ -2,174 +2,174 @@
 
 class ProductModel
 {
-    public static function insert($data)
+    public static function insert(array $data)
     {
         $db = DB::getInstance();
         $sql = "
-            INSERT INTO nb_doctors (
-                title, branch_id, position, department, keywords,
-                career, activity, education,
-                publication_visible, publications,
-                thumb_image, detail_image,
-                sort_no, is_active, is_ceo, created_at, updated_at
+            INSERT INTO nb_products (
+                product_category_id, title, sub_title, description, url,
+                feature, feature_desc,
+                thumb_image, detail_image, banner_img,
+                product_img_1, product_img_2, product_img_3, product_img_4, product_img_5,
+                selected_variants, variant_specs,
+                sort_no, is_active, created_at, updated_at
             ) VALUES (
-                :title, :branch_id, :position, :department, :keywords,
-                :career, :activity, :education,
-                :publication_visible, :publications,
-                :thumb_image, :detail_image,
-                :sort_no, :is_active, :is_ceo, NOW(), NOW()
+                :product_category_id, :title, :sub_title, :description, :url,
+                :feature, :feature_desc,
+                :thumb_image, :detail_image, :banner_img,
+                :product_img_1, :product_img_2, :product_img_3, :product_img_4, :product_img_5,
+                :selected_variants, :variant_specs,
+                :sort_no, :is_active, NOW(), NOW()
             )
         ";
-
         $stmt = $db->prepare($sql);
         return $stmt->execute([
+            ':product_category_id' => $data['product_category_id'],
             ':title'               => $data['title'],
-            ':branch_id'           => $data['branch_id'],
-            ':position'            => $data['position'],
-            ':department'          => $data['department'],
-            ':keywords'            => $data['keywords'],
-            ':career'              => $data['career'],
-            ':activity'            => $data['activity'],
-            ':education'           => $data['education'],
-            ':publication_visible' => $data['publication_visible'],
-            ':publications'        => $data['publications'],
-            ':thumb_image'         => $data['thumb_image'],
-            ':detail_image'        => $data['detail_image'],
-            ':sort_no'             => $data['sort_no'],
-            ':is_active'           => $data['is_active'],
-            ':is_ceo'              => $data['is_ceo'],
+            ':sub_title'           => $data['sub_title'] ?? null,
+            ':description'         => $data['description'] ?? null,
+            ':url'                 => $data['url'] ?? null,
+            ':feature'             => $data['feature'] ?? null,
+            ':feature_desc'        => $data['feature_desc'] ?? null,
+            ':thumb_image'         => $data['thumb_image'] ?? null,
+            ':detail_image'        => $data['detail_image'] ?? null,
+            ':banner_img'          => $data['banner_img'] ?? null,
+            ':product_img_1'       => $data['product_img_1'] ?? null,
+            ':product_img_2'       => $data['product_img_2'] ?? null,
+            ':product_img_3'       => $data['product_img_3'] ?? null,
+            ':product_img_4'       => $data['product_img_4'] ?? null,
+            ':product_img_5'       => $data['product_img_5'] ?? null,
+            ':selected_variants'   => $data['selected_variants'] ?? null,
+            ':variant_specs'       => $data['variant_specs'] ?? null,
+            ':sort_no'             => (int)$data['sort_no'],
+            ':is_active'           => (int)$data['is_active'],
         ]);
     }
 
-
-    public static function bumpSortNosOnInsert(?int $branch_id = null, ?string $department = null): void
+    public static function bumpSortNosOnInsert(): void
     {
         $db = DB::getInstance();
-
-        $where  = [];
-        $params = [];
-
-        if ($branch_id !== null) {
-            $where[] = 'branch_id = :branch_id';
-            $params[':branch_id'] = $branch_id;
-        }
-        if ($department !== null && $department !== '') {
-            $where[] = 'department = :department';
-            $params[':department'] = $department;
-        }
-
-        $sql = 'UPDATE nb_doctors SET sort_no = sort_no + 1'
-             . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
-
-        $stmt = $db->prepare($sql);
-        $stmt->execute($params);
+        $db->query("UPDATE nb_products SET sort_no = sort_no + 1");
     }
 
-
-    public static function update($id, $data)
+    public static function update(int $id, array $data)
     {
         $db = DB::getInstance();
 
         $fields = [
-            'title', 'branch_id', 'position', 'department', 'keywords',
-            'career', 'activity', 'education',
-            'publication_visible', 'publications',
-            'sort_no', 'is_active', 'is_ceo'
+            'product_category_id',
+            'title',
+            'sub_title',
+            'description',
+            'url',
+            'feature',
+            'feature_desc',
+            'selected_variants',
+            'variant_specs',
+            'sort_no',
+            'is_active'
         ];
 
-        if (!empty($data['thumb_image'])) $fields[] = 'thumb_image';
-        if (!empty($data['detail_image'])) $fields[] = 'detail_image';
+        $imageFields = [
+            'thumb_image','detail_image','banner_img',
+            'product_img_1','product_img_2','product_img_3','product_img_4','product_img_5'
+        ];
+        foreach ($imageFields as $f) {
+            if (array_key_exists($f, $data) && $data[$f] !== null && $data[$f] !== '') {
+                $fields[] = $f;
+            }
+        }
 
-        $setClauses = array_map(fn($f) => "$f = :$f", $fields);
-        $setClauses[] = "updated_at = NOW()";
+        $sets = array_map(fn($f) => "$f = :$f", $fields);
+        $sets[] = "updated_at = NOW()";
 
-        $sql = "UPDATE nb_doctors SET " . implode(", ", $setClauses) . " WHERE id = :id";
+        $sql = "UPDATE nb_products SET " . implode(", ", $sets) . " WHERE id = :id";
         $stmt = $db->prepare($sql);
 
-        $data['id'] = $id;
-        return $stmt->execute($data);
+        $params = [
+            ':product_category_id' => $data['product_category_id'],
+            ':title'               => $data['title'],
+            ':sub_title'           => $data['sub_title'] ?? null,
+            ':description'         => $data['description'] ?? null,
+            ':url'                 => $data['url'] ?? null,
+            ':feature'             => $data['feature'] ?? null,
+            ':feature_desc'        => $data['feature_desc'] ?? null,
+            ':selected_variants'   => $data['selected_variants'] ?? null,
+            ':variant_specs'       => $data['variant_specs'] ?? null,
+            ':sort_no'             => (int)$data['sort_no'],
+            ':is_active'           => (int)$data['is_active'],
+            ':id'                  => $id,
+        ];
+        foreach ($imageFields as $f) {
+            if (in_array($f, $fields, true)) {
+                $params[":$f"] = $data[$f] ?? null;
+            }
+        }
+
+        return $stmt->execute($params);
     }
 
-
-    public static function delete($id)
+    public static function delete(int $id)
     {
         $db = DB::getInstance();
 
-        // 삭제 전 해당 레코드의 sort_no 가져오기
-        $stmt = $db->prepare("SELECT sort_no FROM nb_doctors WHERE id = :id");
+        $stmt = $db->prepare("SELECT sort_no FROM nb_products WHERE id = :id");
         $stmt->execute([':id' => $id]);
         $sortNo = $stmt->fetchColumn();
-
         if ($sortNo === false) return false;
 
-        // 삭제
-        $stmt = $db->prepare("DELETE FROM nb_doctors WHERE id = :id");
+        $stmt = $db->prepare("DELETE FROM nb_products WHERE id = :id");
         $result = $stmt->execute([':id' => $id]);
 
         if ($result) {
-            // 삭제 후 sort_no 재조정
-            $stmt = $db->prepare("
-                UPDATE nb_doctors 
-                SET sort_no = sort_no - 1 
-                WHERE sort_no > :sortNo
-            ");
-            $stmt->execute([':sortNo' => $sortNo]);
+            $stmt = $db->prepare("UPDATE nb_products SET sort_no = sort_no - 1 WHERE sort_no > :s");
+            $stmt->execute([':s' => $sortNo]);
         }
-
         return $result;
     }
-    
+
     public static function deleteMultiple(array $ids)
     {
         if (empty($ids)) return false;
 
         $db = DB::getInstance();
-
-        // 삭제 대상 ID 자리 표시자
-        $placeholders = [];
+        $ph = [];
         $params = [];
-        foreach ($ids as $index => $id) {
-            $key = ":id$index";
-            $placeholders[] = $key;
-            $params[$key] = (int)$id;
+        foreach ($ids as $i => $v) {
+            $k = ":id$i";
+            $ph[] = $k;
+            $params[$k] = (int)$v;
         }
 
-        // 삭제 대상의 sort_no 가져오기
-        $stmt = $db->prepare("SELECT sort_no FROM nb_doctors WHERE id IN (" . implode(', ', $placeholders) . ")");
+        $stmt = $db->prepare("SELECT sort_no FROM nb_products WHERE id IN (" . implode(',', $ph) . ")");
         $stmt->execute($params);
         $sortNos = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
         if (empty($sortNos)) return false;
 
         $minSortNo = min($sortNos);
         $deletedCount = count($sortNos);
 
-        // 삭제
-        $sql = "DELETE FROM nb_doctors WHERE id IN (" . implode(', ', $placeholders) . ")";
-        $stmt = $db->prepare($sql);
+        $stmt = $db->prepare("DELETE FROM nb_products WHERE id IN (" . implode(',', $ph) . ")");
         $result = $stmt->execute($params);
 
         if ($result) {
-            // 삭제된 개수만큼 sort_no 감소
             $stmt = $db->prepare("
-                UPDATE nb_doctors 
-                SET sort_no = sort_no - :deletedCount 
-                WHERE sort_no > :minSortNo
+                UPDATE nb_products
+                SET sort_no = sort_no - :cnt
+                WHERE sort_no > :minNo
             ");
             $stmt->execute([
-                ':deletedCount' => $deletedCount,
-                ':minSortNo'    => $minSortNo
+                ':cnt'   => $deletedCount,
+                ':minNo' => $minSortNo
             ]);
         }
-
         return $result;
     }
 
-
-    public static function find($id)
+    public static function find(int $id)
     {
         $db = DB::getInstance();
-        $stmt = $db->prepare("SELECT * FROM nb_doctors WHERE id = :id");
+        $stmt = $db->prepare("SELECT * FROM nb_products WHERE id = :id");
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -177,22 +177,27 @@ class ProductModel
     public static function getMaxSortNo(): int
     {
         $db = DB::getInstance();
-        $stmt = $db->query("SELECT MAX(sort_no) FROM nb_doctors");
-        return (int) $stmt->fetchColumn();
+        $stmt = $db->query("SELECT MAX(sort_no) FROM nb_products");
+        return (int)$stmt->fetchColumn();
     }
 
+    public static function getMinSortNo(): int
+    {
+        $db = DB::getInstance();
+        $stmt = $db->query("SELECT MIN(sort_no) FROM nb_products");
+        return (int)$stmt->fetchColumn();
+    }
 
     public static function shiftSortNosForUpdate(int $oldNo, int $newNo, int $id): void
     {
         $db = DB::getInstance();
-
         if ($newNo === $oldNo) return;
 
         if ($newNo < $oldNo) {
-            $sql = "UPDATE nb_doctors SET sort_no = sort_no + 1 
+            $sql = "UPDATE nb_products SET sort_no = sort_no + 1
                     WHERE sort_no >= :newNo AND sort_no < :oldNo AND id != :id";
         } else {
-            $sql = "UPDATE nb_doctors SET sort_no = sort_no - 1 
+            $sql = "UPDATE nb_products SET sort_no = sort_no - 1
                     WHERE sort_no > :oldNo AND sort_no <= :newNo AND id != :id";
         }
 
@@ -203,14 +208,4 @@ class ProductModel
             ':id'    => $id,
         ]);
     }
-
-    public static function getMinSortNo(): int
-    {
-        $db = DB::getInstance();
-        $stmt = $db->query("SELECT MIN(sort_no) FROM nb_doctors");
-        return (int)$stmt->fetchColumn();
-    }
-
-
-
 }

@@ -2,14 +2,12 @@
 include_once "../../../inc/lib/base.class.php";
 
 $pageName = "팝업";
-$depthnum = 3;
+$depthnum = 4;
 $pagenum = 2;
 
 try {
     $db = DB::getInstance(); 
-    $branches = [];
-    $stmt = $db->query("SELECT * FROM nb_branches WHERE id IN (2,3,4) ORDER BY id ASC"); // 강서, 광명, 신촌만
-    $branches = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (Exception $e) {
     echo "DB 오류: " . $e->getMessage();
     exit;
@@ -55,27 +53,13 @@ include_once "../../inc/admin.js.php";
                             </div>
                             <div class="no-card-body no-admin-column no-admin-column--detail">
 
-                                <!-- 지점 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title"><label for="branch_category">지점</label></h3>
-                                    <div class="no-admin-content">
-                                        <select name="branch_id" id="branch_category">
-                                            <option value="">공통</option>
-                                            <?php foreach ($branches as $branch): ?>
-                                            <option value="<?= $branch['id'] ?>">
-                                                <?= htmlspecialchars($branch['name_kr']) ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-
                                 <!-- 팝업 타입 -->
                                 <div class="no-admin-block">
                                     <h3 class="no-admin-title"><label for="popup_type">팝업 위치</label></h3>
                                     <div class="no-admin-content">
                                         <select name="popup_type" id="popup_type" required>
                                             <option value="">선택</option>
-                                            <?php foreach ($banner_types as $key => $label): ?>
+                                            <?php foreach ($popup_types as $key => $label): ?>
                                             <option value="<?= $key ?>"><?= htmlspecialchars($label) ?></option>
                                             <?php endforeach; ?>
                                         </select>

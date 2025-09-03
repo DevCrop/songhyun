@@ -7,70 +7,60 @@ class PopupModel
         $db = DB::getInstance();
         $sql = "
             INSERT INTO nb_popups (
-                title, branch_id, popup_type, has_link, link_url,
+                title, popup_type, has_link, link_url,
                 sort_no, is_active, description, start_at, end_at, popup_image,
-                is_unlimited, is_target, -- ✅ 추가됨
+                is_unlimited, is_target,
                 created_at, updated_at
             ) VALUES (
-                :title, :branch_id, :popup_type, :has_link, :link_url,
+                :title, :popup_type, :has_link, :link_url,
                 :sort_no, :is_active, :description, :start_at, :end_at, :popup_image,
-                :is_unlimited, :is_target, -- ✅ 추가됨
+                :is_unlimited, :is_target,
                 NOW(), NOW()
             )
         ";
-
         $stmt = $db->prepare($sql);
         return $stmt->execute([
-            ':title'         => $data['title'],
-            ':branch_id'     => $data['branch_id'],
-            ':popup_type'    => $data['popup_type'],
-            ':has_link'      => $data['has_link'],
-            ':link_url'      => $data['link_url'],
-            ':sort_no'       => $data['sort_no'],
-            ':is_active'     => $data['is_active'],
-            ':description'   => $data['description'],
-            ':start_at'      => $data['start_at'],
-            ':end_at'        => $data['end_at'],
-            ':popup_image'   => $data['popup_image'],
-            ':is_unlimited'  => $data['is_unlimited'],
-            ':is_target'     => $data['is_target'], // ✅ 추가됨
+            ':title'        => $data['title'],
+            ':popup_type'   => $data['popup_type'],
+            ':has_link'     => $data['has_link'],
+            ':link_url'     => $data['link_url'],
+            ':sort_no'      => $data['sort_no'],
+            ':is_active'    => $data['is_active'],
+            ':description'  => $data['description'],
+            ':start_at'     => $data['start_at'],
+            ':end_at'       => $data['end_at'],
+            ':popup_image'  => $data['popup_image'],
+            ':is_unlimited' => $data['is_unlimited'],
+            ':is_target'    => $data['is_target'],
         ]);
     }
 
+    public static function bumpSortNosOnInsert(?int $popup_type = null): void
+    {
+        $db = DB::getInstance();
+        $where = [];
+        $params = [];
 
-	 public static function bumpSortNosOnInsert(?int $branch_id = null, ?int $popup_type = null): void
-	{
-		$db = DB::getInstance();
+        if ($popup_type !== null) {
+            $where[] = 'popup_type = :popup_type';
+            $params[':popup_type'] = $popup_type;
+        }
 
-		$where = [];
-		$params = [];
+        $sql = 'UPDATE nb_popups SET sort_no = sort_no + 1'
+             . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
 
-		if ($branch_id !== null) {
-			$where[] = 'branch_id = :branch_id';
-			$params[':branch_id'] = $branch_id;
-		}
-		if ($popup_type !== null) {
-			$where[] = 'popup_type = :popup_type';
-			$params[':popup_type'] = $popup_type;
-		}
-
-		$sql = 'UPDATE nb_popups SET sort_no = sort_no + 1'
-			 . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
-
-		$stmt = $db->prepare($sql);
-		$stmt->execute($params);
-	}
-
-
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+    }
 
     public static function update($id, $data)
     {
         $db = DB::getInstance();
 
         $fields = [
-            'title', 'branch_id', 'popup_type', 'has_link', 'link_url',
+            'title', 'popup_type', 'has_link', 'link_url',
             'sort_no', 'is_active', 'description', 'start_at', 'end_at',
-            'is_unlimited', 'is_target' // ✅ 추가됨
+            'is_unlimited', 'is_target'
         ];
 
         if (!empty($data['popup_image'])) {
@@ -91,19 +81,16 @@ class PopupModel
     {
         $db = DB::getInstance();
 
-        // 삭제 전 해당 레코드의 sort_no 가져오기
         $stmt = $db->prepare("SELECT sort_no FROM nb_popups WHERE id = :id");
         $stmt->execute([':id' => $id]);
         $sortNo = $stmt->fetchColumn();
 
         if ($sortNo === false) return false;
 
-        // 삭제
         $stmt = $db->prepare("DELETE FROM nb_popups WHERE id = :id");
         $result = $stmt->execute([':id' => $id]);
 
         if ($result) {
-            // 삭제 후 sort_no 재조정
             $stmt = $db->prepare("
                 UPDATE nb_popups 
                 SET sort_no = sort_no - 1 
@@ -114,14 +101,13 @@ class PopupModel
 
         return $result;
     }
-    
+
     public static function deleteMultiple(array $ids)
     {
         if (empty($ids)) return false;
 
         $db = DB::getInstance();
 
-        // 삭제 대상 ID 자리 표시자
         $placeholders = [];
         $params = [];
         foreach ($ids as $index => $id) {
@@ -130,7 +116,6 @@ class PopupModel
             $params[$key] = (int)$id;
         }
 
-        // 삭제 대상의 sort_no 가져오기
         $stmt = $db->prepare("SELECT sort_no FROM nb_popups WHERE id IN (" . implode(', ', $placeholders) . ")");
         $stmt->execute($params);
         $sortNos = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -140,13 +125,11 @@ class PopupModel
         $minSortNo = min($sortNos);
         $deletedCount = count($sortNos);
 
-        // 삭제
         $sql = "DELETE FROM nb_popups WHERE id IN (" . implode(', ', $placeholders) . ")";
         $stmt = $db->prepare($sql);
         $result = $stmt->execute($params);
 
         if ($result) {
-            // 삭제된 개수만큼 sort_no 감소
             $stmt = $db->prepare("
                 UPDATE nb_popups 
                 SET sort_no = sort_no - :deletedCount 
@@ -160,9 +143,6 @@ class PopupModel
 
         return $result;
     }
-
-
-
 
     public static function find($id)
     {
@@ -178,7 +158,6 @@ class PopupModel
         $stmt = $db->query("SELECT MAX(sort_no) FROM nb_popups");
         return (int) $stmt->fetchColumn();
     }
-
 
     public static function shiftSortNosForUpdate(int $oldNo, int $newNo, int $id): void
     {
@@ -208,7 +187,4 @@ class PopupModel
         $stmt = $db->query("SELECT MIN(sort_no) FROM nb_popups");
         return (int)$stmt->fetchColumn();
     }
-
-
-
 }

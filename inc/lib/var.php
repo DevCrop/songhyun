@@ -9,11 +9,11 @@ $banner_types = [
     1 => '메인 상단이미지',
 ];
 
+
 $popup_types = [
     1 => '메인 페이지',
-    2 => '암면역센터',
-    3 => '신경면역센터',
-    4 => '재활센터',
+    2 => '문의하기 페이지',
+    3 => '제품 페이지',
 ];
 
 $admin_roles = [
@@ -56,13 +56,12 @@ $_targetArr = [
 $board_type = [
     'bbs' => '게시판',
     'gal' => '갤러리',
+    'pro' => '제품',
 
     // 홍보센터
     'new' => '뉴스',
     'not' => '공지사항',
 ];
-
-
 
 
 // FAQ 카테고리
@@ -78,6 +77,37 @@ $faq_categories = [
 $is_active = [
     1 => "활성화",
     0 => "비활성화"
+];
+
+
+
+$product_categories = [
+  1 => "eversys",
+  2 => "scotsman",
+  3 => "lacimbali",
+  4 => "fetco",
+  5 => "cooktek",
+  6 => "grindmaster",
+];
+
+$product_secondary_categories = [
+  1 => "eversys",
+  2 => "scotsman",
+  3 => [
+    1 => "TS",
+    2 => "MILK",
+    3 => "3GR",
+    4 => "2GR",
+  ],
+  4 => "fetco",
+  5 => "cooktek",
+  6 => "grindmaster",
+];
+
+
+$area_categories = [
+    1 => "서울",
+    2 => "부산"
 ];
 
 

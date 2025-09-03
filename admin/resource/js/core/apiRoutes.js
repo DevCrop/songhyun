@@ -11,7 +11,8 @@ export const API = {
   BANNER: "/admin/Controller/BannerController.php",
   POPUP: "/admin/Controller/PopupController.php",
   ETC: "/admin/Controller/EtcController.php",
-  HERB : "/admin/Controller/HerbController.php",
+  HERB: "/admin/Controller/HerbController.php",
   SIMPLE: "/admin/Controller/SimpleController.php",
   CUSTOM: "/admin/Controller/CustomController.php",
-  };
+  PRODUCT: "/admin/Controller/ProductController.php",
+};

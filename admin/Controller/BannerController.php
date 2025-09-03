@@ -16,7 +16,6 @@ try {
     if ($mode === 'insert') {
         $data = [
             'title'         => trim($input['title'] ?? ''),
-            'branch_id'     => !empty($input['branch_id']) ? (int)$input['branch_id'] : null,
             'banner_type'   => (int)($input['banner_type'] ?? 0),
             'has_link'      => (int)($input['has_link'] ?? 2),
             'link_url'      => trim($input['link_url'] ?? ''),
@@ -28,16 +27,8 @@ try {
             'is_unlimited'  => (int)($input['is_unlimited'] ?? 1),
         ];
 
-        // ✅ sort_no 자동 처리
-		/*
-        $data['sort_no'] = isset($input['sort_no']) && (int)$input['sort_no'] > 0
-            ? (int)$input['sort_no']
-            : BannerModel::getMaxSortNo() + 1;
-		*/
-
         $validator->require('title', $data['title'], '제목');
         $validator->require('banner_type', $data['banner_type'], '배너 위치');
-        $validator->require('branch_id', $data['branch_id'], '지점');
 
         $image = imageUpload($upload_path, $_FILES['banner_image'] ?? []);
         if (empty($image['saved'])) {
@@ -54,10 +45,10 @@ try {
             exit;
         }
 
-        BannerModel::bumpSortNosOnInsert(); // ← 추가: 기존 전부 +1
-		$data['sort_no'] = 1;               // ← 추가: 새 배너는 1로 고정
+        BannerModel::bumpSortNosOnInsert(); // 기존 전부 +1
+        $data['sort_no'] = 1;               // 새 배너는 1로 고정
 
-		$result = BannerModel::insert($data);
+        $result = BannerModel::insert($data);
 
         echo json_encode([
             'success' => $result,
@@ -73,7 +64,6 @@ try {
 
         $data = [
             'title'         => trim($input['title'] ?? ''),
-            'branch_id'     => !empty($input['branch_id']) ? (int)$input['branch_id'] : null,
             'banner_type'   => (int)($input['banner_type'] ?? 0),
             'has_link'      => (int)($input['has_link'] ?? 2),
             'link_url'      => trim($input['link_url'] ?? ''),
@@ -90,7 +80,6 @@ try {
 
         $validator->require('title', $data['title'], '제목');
         $validator->require('banner_type', $data['banner_type'], '배너 위치');
-        $validator->require('branch_id', $data['branch_id'], '지점');
 
         $existing = BannerModel::find($id);
         if (!$existing) {
@@ -98,7 +87,6 @@ try {
             exit;
         }
 
-        // ✅ 정렬 밀어내기 처리
         $oldSortNo = (int)$existing['sort_no'];
         if ($newSortNo !== $oldSortNo && $newSortNo > 0) {
             BannerModel::shiftSortNosForUpdate($oldSortNo, $newSortNo, $id);
@@ -173,14 +161,12 @@ try {
         exit;
     }
 
-    
+    // SORT
     if ($mode === 'sort') {
         $id = (int)($input['id'] ?? 0);
         $newNo = (int)($input['new_no'] ?? 0);
 
-
-        
-        if (!$id || $newNo <= 0) {  // 0 이하는 잘못된 데이터로 처리
+        if (!$id || $newNo <= 0) {
             echo json_encode(['success' => false, 'message' => '잘못된 데이터']);
             exit;
         }
@@ -204,7 +190,7 @@ try {
 
         $minSortNo = BannerModel::getMinSortNo();
         $maxSortNo = BannerModel::getMaxSortNo();
-        
+
         if ($newNo > $maxSortNo) {
             echo json_encode(['success' => false, 'message' => '제일 높은 순서의 게시물입니다.']);
             exit;
@@ -215,12 +201,10 @@ try {
             exit;
         }
 
-
         BannerModel::shiftSortNosForUpdate($oldNo, $newNo, $id);
 
         $dataToUpdate = [
             'title'        => $currentData['title'],
-            'branch_id'    => !empty($currentData['branch_id']) ? (int)$currentData['branch_id'] : null,
             'banner_type'  => (int)$currentData['banner_type'],
             'has_link'     => (int)$currentData['has_link'],
             'link_url'     => $currentData['link_url'],
@@ -233,7 +217,6 @@ try {
             'banner_image' => $currentData['banner_image'],
             'sort_no'      => $newNo,
         ];
-
 
         $updateResult = BannerModel::update($id, $dataToUpdate);
 

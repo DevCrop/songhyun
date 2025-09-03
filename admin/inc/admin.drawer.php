@@ -64,11 +64,7 @@ $menus = [
         'key' => 'inquiry',
         'title' => '문의 관리',
         'icon' => 'fa-envelope-open-text',
-        'subs' => [
-            ['title' => '간편 문의', 'url' => 'inquiry/simple.php'],
-            ['title' => '공진단 · 상담 문의', 'url' => 'inquiry/herb.php'],
-            ['title' => '예진표 (맞춤한약)', 'url' => 'inquiry/prescription.php'],
-        ]
+        'url'  => '/admin/pages/inquiry/index.php',
     ],
 	  8 => [
         'key' => 'log',

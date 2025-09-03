@@ -295,6 +295,7 @@ $skin = $_REQUEST['skin'];
                                         </select>
                                     </div>
                                 </div>
+
                                 <!-- admin-block -->
 
                                 <div class="no-admin-block">

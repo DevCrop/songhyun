@@ -161,7 +161,7 @@ include_once "../../inc/admin.js.php";
                                 <!-- admin-block -->
 
                                 <!-- Additional Fields -->
-                                <div class="no-admin-block no-admin-pos">
+                                <div class="no-admin-block ">
                                     <h3 class="no-admin-title"><label for="title">제목</label></h3>
                                     <div class="no-admin-content">
                                         <input type="text" name="title" id="title" class="no-input--detail"
@@ -178,7 +178,7 @@ include_once "../../inc/admin.js.php";
                                     </div>
                                 </div>
 
-								
+
                                 <div class="no-admin-block">
                                     <h3 class="no-admin-title"><label for="direct_url">유튜브 링크 코드</label></h3>
                                     <div class="no-admin-content">
@@ -189,7 +189,7 @@ include_once "../../inc/admin.js.php";
                                     </div>
                                 </div>
 
-                                <div class="no-admin-block">
+                                <div class="no-admin-block no-admin-pos">
                                     <h3 class="no-admin-title"><span>공지</span></h3>
                                     <div class="no-admin-content">
                                         <label for="is_notice" class="no-items-center">
@@ -219,6 +219,44 @@ include_once "../../inc/admin.js.php";
                                             필수 등록해야 합니다.</span>
                                     </div>
                                 </div>
+
+
+                                <div class="no-admin-block">
+                                    <h3 class="no-admin-title"><label for="post_description">게시물 설명글</label></h3>
+                                    <div class="no-admin-content">
+                                        <textarea name="post_description" id="post_description"
+                                            class="no-textarea--detail" rows="6"
+                                            placeholder="게시물 설명을 입력하세요."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="no-admin-block">
+                                    <h3 class="no-admin-title"><label for="feature_list">특징 리스트</label></h3>
+                                    <div class="no-admin-content">
+                                        <textarea name="feature_list" id="feature_list" class="no-textarea--detail"
+                                            rows="6" placeholder="줄바꿈으로 구분하여 특징을 입력하세요."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="no-admin-block">
+                                    <h3 class="no-admin-title"><label for="feature_description">특징 설명글</label></h3>
+                                    <div class="no-admin-content">
+                                        <textarea name="feature_description" id="feature_description"
+                                            class="no-textarea--detail" rows="6"
+                                            placeholder="특징에 대한 상세 설명을 입력하세요."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="no-admin-block">
+                                    <h3 class="no-admin-title"><label for="tech_title_description">기술력 타이틀 및 설명글</label>
+                                    </h3>
+                                    <div class="no-admin-content">
+                                        <textarea name="tech_title_description" id="tech_title_description"
+                                            class="no-textarea--detail" rows="6"
+                                            placeholder="기술력 타이틀과 설명을 함께 입력하세요."></textarea>
+                                    </div>
+                                </div>
+
 
                                 <div class="no-admin-block">
                                     <h3 class="no-admin-title"><label for="title">파일첨부</label></h3>

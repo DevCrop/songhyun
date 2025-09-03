@@ -7,22 +7,20 @@ class BannerModel
         $db = DB::getInstance();
         $sql = "
             INSERT INTO nb_banners (
-                title, branch_id, banner_type, has_link, link_url,
+                title, banner_type, has_link, link_url,
                 sort_no, is_active, description, start_at, end_at, banner_image,
-                is_unlimited, is_target,       -- ✅ 추가
+                is_unlimited, is_target,
                 created_at, updated_at
             ) VALUES (
-                :title, :branch_id, :banner_type, :has_link, :link_url,
+                :title, :banner_type, :has_link, :link_url,
                 :sort_no, :is_active, :description, :start_at, :end_at, :banner_image,
-                :is_unlimited, :is_target,      -- ✅ 추가
+                :is_unlimited, :is_target,
                 NOW(), NOW()
             )
         ";
-
         $stmt = $db->prepare($sql);
         return $stmt->execute([
             ':title'        => $data['title'],
-            ':branch_id'    => $data['branch_id'],
             ':banner_type'  => $data['banner_type'],
             ':has_link'     => $data['has_link'],
             ':link_url'     => $data['link_url'],
@@ -33,87 +31,63 @@ class BannerModel
             ':end_at'       => $data['end_at'],
             ':banner_image' => $data['banner_image'],
             ':is_unlimited' => $data['is_unlimited'],
-            ':is_target'    => $data['is_target'], // ✅ 추가
+            ':is_target'    => $data['is_target'],
         ]);
     }
 
-	public static function bumpSortNosOnInsert(?int $branch_id = null, ?int $banner_type = null): void
-	{
-		$db = DB::getInstance();
-
-		$where = [];
-		$params = [];
-
-		if ($branch_id !== null) {
-			$where[] = 'branch_id = :branch_id';
-			$params[':branch_id'] = $branch_id;
-		}
-		if ($banner_type !== null) {
-			$where[] = 'banner_type = :banner_type';
-			$params[':banner_type'] = $banner_type;
-		}
-
-		$sql = 'UPDATE nb_banners SET sort_no = sort_no + 1'
-			 . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
-
-		$stmt = $db->prepare($sql);
-		$stmt->execute($params);
-	}
-
+    public static function bumpSortNosOnInsert(?int $banner_type = null): void
+    {
+        $db = DB::getInstance();
+        $where = [];
+        $params = [];
+        if ($banner_type !== null) {
+            $where[] = 'banner_type = :banner_type';
+            $params[':banner_type'] = $banner_type;
+        }
+        $sql = 'UPDATE nb_banners SET sort_no = sort_no + 1' . (count($where) ? ' WHERE ' . implode(' AND ', $where) : '');
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+    }
 
     public static function update($id, $data)
     {
         $db = DB::getInstance();
-
         $fields = [
-            'title', 'branch_id', 'banner_type', 'has_link', 'link_url',
+            'title', 'banner_type', 'has_link', 'link_url',
             'sort_no', 'is_active', 'description', 'start_at', 'end_at',
-            'is_unlimited', 'is_target' // ✅ 추가
+            'is_unlimited', 'is_target'
         ];
-
         if (!empty($data['banner_image'])) {
             $fields[] = 'banner_image';
         }
-
         $setClauses = array_map(fn($f) => "$f = :$f", $fields);
         $setClauses[] = "updated_at = NOW()";
-
         $sql = "UPDATE nb_banners SET " . implode(", ", $setClauses) . " WHERE id = :id";
         $stmt = $db->prepare($sql);
-
         $data['id'] = $id;
         return $stmt->execute($data);
     }
 
-
     public static function delete($id)
     {
         $db = DB::getInstance();
-
         $stmt = $db->prepare("SELECT sort_no FROM nb_banners WHERE id = :id");
         $stmt->execute([':id' => $id]);
         $sortNo = $stmt->fetchColumn();
-
-        if ($sortNo === false) return false; // 해당 id 없음
-
+        if ($sortNo === false) return false;
         $stmt = $db->prepare("DELETE FROM nb_banners WHERE id = :id");
         $deleted = $stmt->execute([':id' => $id]);
-
         if ($deleted) {
             $stmt = $db->prepare("UPDATE nb_banners SET sort_no = sort_no - 1 WHERE sort_no > :sortNo");
             $stmt->execute([':sortNo' => $sortNo]);
         }
-
         return $deleted;
     }
 
     public static function deleteMultiple(array $ids)
     {
         if (empty($ids)) return false;
-
         $db = DB::getInstance();
-
-        // 삭제 대상 ID 자리 표시자
         $placeholders = [];
         $params = [];
         foreach ($ids as $index => $id) {
@@ -121,24 +95,16 @@ class BannerModel
             $placeholders[] = $key;
             $params[$key] = (int)$id;
         }
-
-        // 삭제 대상의 sort_no 가져오기
         $stmt = $db->prepare("SELECT sort_no FROM nb_banners WHERE id IN (" . implode(', ', $placeholders) . ")");
         $stmt->execute($params);
         $sortNos = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
         if (empty($sortNos)) return false;
-
         $minSortNo = min($sortNos);
         $deletedCount = count($sortNos);
-
-        // 삭제
         $sql = "DELETE FROM nb_banners WHERE id IN (" . implode(', ', $placeholders) . ")";
         $stmt = $db->prepare($sql);
         $result = $stmt->execute($params);
-
         if ($result) {
-            // 삭제된 개수만큼 sort_no 감소
             $stmt = $db->prepare("
                 UPDATE nb_banners 
                 SET sort_no = sort_no - :deletedCount 
@@ -149,7 +115,6 @@ class BannerModel
                 ':minSortNo'    => $minSortNo
             ]);
         }
-
         return $result;
     }
 
@@ -168,13 +133,10 @@ class BannerModel
         return (int) $stmt->fetchColumn();
     }
 
-
     public static function shiftSortNosForUpdate(int $oldNo, int $newNo, int $id): void
     {
         $db = DB::getInstance();
-
         if ($newNo === $oldNo) return;
-
         if ($newNo < $oldNo) {
             $sql = "UPDATE nb_banners SET sort_no = sort_no + 1 
                     WHERE sort_no >= :newNo AND sort_no < :oldNo AND id != :id";
@@ -182,7 +144,6 @@ class BannerModel
             $sql = "UPDATE nb_banners SET sort_no = sort_no - 1 
                     WHERE sort_no > :oldNo AND sort_no <= :newNo AND id != :id";
         }
-
         $stmt = $db->prepare($sql);
         $stmt->execute([
             ':newNo' => $newNo,
@@ -197,6 +158,4 @@ class BannerModel
         $stmt = $db->query("SELECT MIN(sort_no) FROM nb_banners");
         return (int)$stmt->fetchColumn();
     }
-
-
 }

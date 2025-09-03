@@ -2,7 +2,7 @@
 include_once "../../../inc/lib/base.class.php";
 
 $pageName = "배너";
-$depthnum = 3;
+$depthnum = 4;
 $pagenum = 1;
 
 try {

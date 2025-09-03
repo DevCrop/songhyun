@@ -6,32 +6,41 @@ include_once "../../../lib/admin.check.ajax.php";
 $mode = $_POST['mode'];
 
 if ($mode == "save") {
-    $board_no    = $_POST['board_no'];
-    $title       = htmlspecialchars($_POST['title'], ENT_QUOTES, 'UTF-8');
-    $direct_url  = htmlspecialchars($_POST['direct_url'], ENT_QUOTES, 'UTF-8');
-    $write_name  = htmlspecialchars($_POST['write_name'], ENT_QUOTES, 'UTF-8');
-    $contents    = htmlspecialchars($_POST['contents'], ENT_QUOTES, 'UTF-8');
-    $category_no = $_POST['category_no'] ?? 0;
-    $is_notice   = $_POST['is_notice'] ?? "N";
+    // 정수 컬럼은 비면 0
+    $board_no    = isset($_POST['board_no']) && $_POST['board_no'] !== '' ? (int)$_POST['board_no'] : 0;
+    $title       = htmlspecialchars($_POST['title'] ?? '', ENT_QUOTES, 'UTF-8');
+    $direct_url  = htmlspecialchars($_POST['direct_url'] ?? '', ENT_QUOTES, 'UTF-8');
+    $write_name  = htmlspecialchars($_POST['write_name'] ?? '', ENT_QUOTES, 'UTF-8');
+    $contents    = htmlspecialchars($_POST['contents'] ?? '', ENT_QUOTES, 'UTF-8');
+    $category_no = isset($_POST['category_no']) && $_POST['category_no'] !== '' ? (int)$_POST['category_no'] : 0;
+    $is_notice   = ($_POST['is_notice'] ?? 'N') === 'Y' ? 'Y' : 'N';
     $regdate     = $_POST['regdate'] ?? null;
 
+    // 4개 textarea도 생 HTML 저장
+    $post_description       = $_POST['post_description'] ?? '';
+    $feature_list           = $_POST['feature_list'] ?? '';
+    $feature_description    = $_POST['feature_description'] ?? '';
+    $tech_title_description = $_POST['tech_title_description'] ?? '';
+    // extra1 ~ extra30
     $extras = [];
-    for ($i = 1; $i <= 15; $i++) $extras["extra$i"] = $_POST["extra$i"] ?? '';
+    for ($i = 1; $i <= 30; $i++) $extras["extra$i"] = $_POST["extra$i"] ?? '';
 
-    $user_no = -1;
-    $allow = $board_file_allow;
+    $user_no     = -1;
+    $allow       = $board_file_allow;
     $uploads_dir = $UPLOAD_DIR_BOARD;
 
+    // 썸네일 업로드
     $origin_file = '';
-    $uploadResult = imageUpload($uploads_dir, $_FILES['thumb_image'], $origin_file, false, $allow);
+    $uploadResult = imageUpload($uploads_dir, $_FILES['thumb_image'] ?? null, $origin_file, false, $allow);
     $thumb_image_saved = $uploadResult['saved'] ?? null;
 
+    // 첨부파일 업로드 (최대 5개)
     $file_attachments = [];
     for ($i = 1; $i <= 5; $i++) {
         if (isset($_FILES["addFile$i"]) && $_FILES["addFile$i"]['error'] === UPLOAD_ERR_OK) {
             $uploadResult = imageUpload($uploads_dir, $_FILES["addFile$i"], $origin_file, true, $allow);
             $file_attachments[$i] = [
-                'saved'  => $uploadResult['saved'] ?? null,
+                'saved'  => $uploadResult['saved']  ?? null,
                 'origin' => $uploadResult['origin'] ?? null,
             ];
         }
@@ -41,31 +50,37 @@ if ($mode == "save") {
         $db = DB::getInstance();
         $db->exec("LOCK TABLES nb_board WRITE");
 
-        $shift = $db->prepare("
-            UPDATE nb_board
-               SET sort_no = sort_no + 1
-             WHERE sitekey = :sitekey
-        ");
+        // sort_no 맨 위로 밀기
+        $shift = $db->prepare("UPDATE nb_board SET sort_no = sort_no + 1 WHERE sitekey = :sitekey");
         $shift->execute([':sitekey' => $NO_SITE_UNIQUE_KEY]);
 
-        $ins = $db->prepare("
+        // INSERT (⬇️ 4개 필드 추가)
+        $sql = "
           INSERT INTO nb_board (
             sitekey, board_no, user_no, category_no, title, contents, regdate,
             is_notice, write_name, direct_url, thumb_image,
             file_attach_1, file_attach_2, file_attach_3, file_attach_4, file_attach_5,
             file_attach_origin_1, file_attach_origin_2, file_attach_origin_3, file_attach_origin_4, file_attach_origin_5,
             sort_no,
-            extra1, extra2, extra3, extra4, extra5, extra6, extra7, extra8, extra9, extra10, extra11, extra12, extra13, extra14, extra15
+            post_description, feature_list, feature_description, tech_title_description,
+            extra1, extra2, extra3, extra4, extra5, extra6, extra7, extra8, extra9, extra10,
+            extra11, extra12, extra13, extra14, extra15, extra16, extra17, extra18, extra19, extra20,
+            extra21, extra22, extra23, extra24, extra25, extra26, extra27, extra28, extra29, extra30
           ) VALUES (
             :sitekey, :board_no, :user_no, :category_no, :title, :contents, COALESCE(:regdate, NOW()),
             :is_notice, :write_name, :direct_url, :thumb_image,
             :file_attach_1, :file_attach_2, :file_attach_3, :file_attach_4, :file_attach_5,
             :file_attach_origin_1, :file_attach_origin_2, :file_attach_origin_3, :file_attach_origin_4, :file_attach_origin_5,
             1,
-            :extra1, :extra2, :extra3, :extra4, :extra5, :extra6, :extra7, :extra8, :extra9, :extra10, :extra11, :extra12, :extra13, :extra14, :extra15
+            :post_description, :feature_list, :feature_description, :tech_title_description,
+            :extra1, :extra2, :extra3, :extra4, :extra5, :extra6, :extra7, :extra8, :extra9, :extra10,
+            :extra11, :extra12, :extra13, :extra14, :extra15, :extra16, :extra17, :extra18, :extra19, :extra20,
+            :extra21, :extra22, :extra23, :extra24, :extra25, :extra26, :extra27, :extra28, :extra29, :extra30
           )
-        ");
-        $ins->execute([
+        ";
+        $ins = $db->prepare($sql);
+
+        $params = [
           ':sitekey' => $NO_SITE_UNIQUE_KEY,
           ':board_no' => $board_no,
           ':user_no' => $user_no,
@@ -87,12 +102,18 @@ if ($mode == "save") {
           ':file_attach_origin_3' => $file_attachments[3]['origin'] ?? null,
           ':file_attach_origin_4' => $file_attachments[4]['origin'] ?? null,
           ':file_attach_origin_5' => $file_attachments[5]['origin'] ?? null,
-          ':extra1'=>$extras['extra1'], ':extra2'=>$extras['extra2'], ':extra3'=>$extras['extra3'],
-          ':extra4'=>$extras['extra4'], ':extra5'=>$extras['extra5'], ':extra6'=>$extras['extra6'],
-          ':extra7'=>$extras['extra7'], ':extra8'=>$extras['extra8'], ':extra9'=>$extras['extra9'],
-          ':extra10'=>$extras['extra10'], ':extra11'=>$extras['extra11'], ':extra12'=>$extras['extra12'],
-          ':extra13'=>$extras['extra13'], ':extra14'=>$extras['extra14'], ':extra15'=>$extras['extra15'],
-        ]);
+
+          // ⬇️ 4개 필드 파라미터
+          ':post_description'       => $post_description,
+          ':feature_list'           => $feature_list,
+          ':feature_description'    => $feature_description,
+          ':tech_title_description' => $tech_title_description,
+        ];
+        for ($i = 1; $i <= 30; $i++) {
+          $params[":extra{$i}"] = $extras["extra{$i}"];
+        }
+
+        $ins->execute($params);
 
         $db->exec("UNLOCK TABLES");
         echo json_encode(["result" => "success", "msg" => "정상적으로 등록되었습니다."]);
@@ -103,74 +124,198 @@ if ($mode == "save") {
 }
 
 
+if ($mode == "save") {
+    // 정수 컬럼은 비면 0
+    $board_no    = isset($_POST['board_no']) && $_POST['board_no'] !== '' ? (int)$_POST['board_no'] : 0;
+    $title       = htmlspecialchars($_POST['title'] ?? '', ENT_QUOTES, 'UTF-8');
+    $direct_url  = htmlspecialchars($_POST['direct_url'] ?? '', ENT_QUOTES, 'UTF-8');
+    $write_name  = htmlspecialchars($_POST['write_name'] ?? '', ENT_QUOTES, 'UTF-8');
+    $contents    = htmlspecialchars($_POST['contents'] ?? '', ENT_QUOTES, 'UTF-8');
+    $category_no = isset($_POST['category_no']) && $_POST['category_no'] !== '' ? (int)$_POST['category_no'] : 0;
+    $is_notice   = ($_POST['is_notice'] ?? 'N') === 'Y' ? 'Y' : 'N';
+    $regdate     = $_POST['regdate'] ?? null;
 
+    $contents    = $_POST['contents'] ?? ''; // ✨ 생 HTML 저장
+    $post_description       = $_POST['post_description'] ?? '';
+    $feature_list           = $_POST['feature_list'] ?? '';
+    $feature_description    = $_POST['feature_description'] ?? '';
+    $tech_title_description = $_POST['tech_title_description'] ?? '';
 
+    // extra1 ~ extra30
+    $extras = [];
+    for ($i = 1; $i <= 30; $i++) $extras["extra$i"] = $_POST["extra$i"] ?? '';
+
+    $user_no     = -1;
+    $allow       = $board_file_allow;
+    $uploads_dir = $UPLOAD_DIR_BOARD;
+
+    // 썸네일 업로드
+    $origin_file = '';
+    $uploadResult = imageUpload($uploads_dir, $_FILES['thumb_image'] ?? null, $origin_file, false, $allow);
+    $thumb_image_saved = $uploadResult['saved'] ?? null;
+
+    // 첨부파일 업로드 (최대 5개)
+    $file_attachments = [];
+    for ($i = 1; $i <= 5; $i++) {
+        if (isset($_FILES["addFile$i"]) && $_FILES["addFile$i"]['error'] === UPLOAD_ERR_OK) {
+            $uploadResult = imageUpload($uploads_dir, $_FILES["addFile$i"], $origin_file, true, $allow);
+            $file_attachments[$i] = [
+                'saved'  => $uploadResult['saved']  ?? null,
+                'origin' => $uploadResult['origin'] ?? null,
+            ];
+        }
+    }
+
+    try {
+        $db = DB::getInstance();
+        $db->exec("LOCK TABLES nb_board WRITE");
+
+        // sort_no 맨 위로 밀기
+        $shift = $db->prepare("UPDATE nb_board SET sort_no = sort_no + 1 WHERE sitekey = :sitekey");
+        $shift->execute([':sitekey' => $NO_SITE_UNIQUE_KEY]);
+
+        // INSERT (⬇️ 4개 필드 추가)
+        $sql = "
+          INSERT INTO nb_board (
+            sitekey, board_no, user_no, category_no, title, contents, regdate,
+            is_notice, write_name, direct_url, thumb_image,
+            file_attach_1, file_attach_2, file_attach_3, file_attach_4, file_attach_5,
+            file_attach_origin_1, file_attach_origin_2, file_attach_origin_3, file_attach_origin_4, file_attach_origin_5,
+            sort_no,
+            post_description, feature_list, feature_description, tech_title_description,
+            extra1, extra2, extra3, extra4, extra5, extra6, extra7, extra8, extra9, extra10,
+            extra11, extra12, extra13, extra14, extra15, extra16, extra17, extra18, extra19, extra20,
+            extra21, extra22, extra23, extra24, extra25, extra26, extra27, extra28, extra29, extra30
+          ) VALUES (
+            :sitekey, :board_no, :user_no, :category_no, :title, :contents, COALESCE(:regdate, NOW()),
+            :is_notice, :write_name, :direct_url, :thumb_image,
+            :file_attach_1, :file_attach_2, :file_attach_3, :file_attach_4, :file_attach_5,
+            :file_attach_origin_1, :file_attach_origin_2, :file_attach_origin_3, :file_attach_origin_4, :file_attach_origin_5,
+            1,
+            :post_description, :feature_list, :feature_description, :tech_title_description,
+            :extra1, :extra2, :extra3, :extra4, :extra5, :extra6, :extra7, :extra8, :extra9, :extra10,
+            :extra11, :extra12, :extra13, :extra14, :extra15, :extra16, :extra17, :extra18, :extra19, :extra20,
+            :extra21, :extra22, :extra23, :extra24, :extra25, :extra26, :extra27, :extra28, :extra29, :extra30
+          )
+        ";
+        $ins = $db->prepare($sql);
+
+        $params = [
+          ':sitekey' => $NO_SITE_UNIQUE_KEY,
+          ':board_no' => $board_no,
+          ':user_no' => $user_no,
+          ':category_no' => $category_no,
+          ':title' => $title,
+          ':contents' => $contents,
+          ':regdate' => $regdate ?: null,
+          ':is_notice' => $is_notice,
+          ':write_name' => $write_name,
+          ':direct_url' => $direct_url,
+          ':thumb_image' => $thumb_image_saved,
+          ':file_attach_1' => $file_attachments[1]['saved'] ?? null,
+          ':file_attach_2' => $file_attachments[2]['saved'] ?? null,
+          ':file_attach_3' => $file_attachments[3]['saved'] ?? null,
+          ':file_attach_4' => $file_attachments[4]['saved'] ?? null,
+          ':file_attach_5' => $file_attachments[5]['saved'] ?? null,
+          ':file_attach_origin_1' => $file_attachments[1]['origin'] ?? null,
+          ':file_attach_origin_2' => $file_attachments[2]['origin'] ?? null,
+          ':file_attach_origin_3' => $file_attachments[3]['origin'] ?? null,
+          ':file_attach_origin_4' => $file_attachments[4]['origin'] ?? null,
+          ':file_attach_origin_5' => $file_attachments[5]['origin'] ?? null,
+
+          // ⬇️ 4개 필드 파라미터
+          ':post_description'       => $post_description,
+          ':feature_list'           => $feature_list,
+          ':feature_description'    => $feature_description,
+          ':tech_title_description' => $tech_title_description,
+        ];
+        for ($i = 1; $i <= 30; $i++) {
+          $params[":extra{$i}"] = $extras["extra{$i}"];
+        }
+
+        $ins->execute($params);
+
+        $db->exec("UNLOCK TABLES");
+        echo json_encode(["result" => "success", "msg" => "정상적으로 등록되었습니다."]);
+    } catch (PDOException $e) {
+        $db->exec("UNLOCK TABLES");
+        echo json_encode(["result" => "fail", "msg" => "처리중 문제가 발생하였습니다.[Error-DB: ".$e->getMessage()."]"]);
+    }
+}
 else if ($mode == "edit") {
     try {
-        $no = $_POST['no'] ?? null;
-        $board_no = $_POST['board_no'] ?? null;
-        $title = $_POST['title'] ?? '';
+        $no         = isset($_POST['no']) ? (int)$_POST['no'] : 0;
+        $board_no   = isset($_POST['board_no']) && $_POST['board_no'] !== '' ? (int)$_POST['board_no'] : 0;
+        $title      = $_POST['title'] ?? '';
         $write_name = $_POST['write_name'] ?? '';
-        $contents = htmlspecialchars($_POST['contents'] ?? '', ENT_QUOTES, 'UTF-8');
-        $category_no = $_POST['category_no'] ?? 0;
-        $is_notice = ($_POST['is_notice'] ?? '') === 'Y' ? 'Y' : 'N';
-        $regdate = $_POST['regdate'] ?? null;
+        $contents   = htmlspecialchars($_POST['contents'] ?? '', ENT_QUOTES, 'UTF-8');
+        $category_no= isset($_POST['category_no']) && $_POST['category_no'] !== '' ? (int)$_POST['category_no'] : 0;
+        $is_notice  = (($_POST['is_notice'] ?? '') === 'Y') ? 'Y' : 'N';
+        $regdate    = $_POST['regdate'] ?? null;
         $direct_url = $_POST['direct_url'] ?? '';
+
+        // ⬇️ 새 텍스트에어리어 4종
+        $post_description       = htmlspecialchars($_POST['post_description'] ?? '', ENT_QUOTES, 'UTF-8');
+        $feature_list           = htmlspecialchars($_POST['feature_list'] ?? '', ENT_QUOTES, 'UTF-8');
+        $feature_description    = htmlspecialchars($_POST['feature_description'] ?? '', ENT_QUOTES, 'UTF-8');
+        $tech_title_description = htmlspecialchars($_POST['tech_title_description'] ?? '', ENT_QUOTES, 'UTF-8');
 
         if (!$no || !$board_no) {
             echo json_encode(["result" => "fail", "msg" => "잘못된 요청입니다."]);
             exit;
         }
 
+        // extra1 ~ extra30
         $extraFields = [];
-        for ($i = 1; $i <= 15; $i++) {
+        for ($i = 1; $i <= 30; $i++) {
             $extraFields["extra{$i}"] = $_POST["extra{$i}"] ?? '';
         }
 
         $uploads_dir = $UPLOAD_DIR_BOARD;
-        $allow = $board_file_allow;
-        $origin_file = ''; // 선언 추가
+        $allow       = $board_file_allow;
+        $origin_file = '';
 
+        // 썸네일 업로드(선택)
         $thumb_image_saved = null;
-
         if (isset($_FILES['thumb_image']) && $_FILES['thumb_image']['error'] === UPLOAD_ERR_OK) {
             $thumb_result = imageUpload($uploads_dir, $_FILES['thumb_image'], $origin_file, false, $allow);
             $thumb_image_saved = $thumb_result['saved'] ?? null;
         }
 
-
+        // 첨부파일 업로드(선택)
         $fileAttachments = [];
         for ($i = 1; $i <= 5; $i++) {
             if (isset($_FILES["addFile{$i}"]) && $_FILES["addFile{$i}"]['error'] === UPLOAD_ERR_OK) {
                 $uploadResult = imageUpload($uploads_dir, $_FILES["addFile{$i}"], null, true, $allow);
-                $fileAttachments["file_attach_{$i}_saved"] = $uploadResult['saved'] ?? null;
+                $fileAttachments["file_attach_{$i}_saved"]  = $uploadResult['saved']  ?? null;
                 $fileAttachments["file_attach_{$i}_origin"] = $uploadResult['origin'] ?? null;
             }
         }
 
         $db = DB::getInstance();
+
+        // 기존 파일 조회
         $stmt = $db->prepare("SELECT thumb_image, file_attach_1, file_attach_2, file_attach_3, file_attach_4, file_attach_5 FROM nb_board WHERE no = :no");
         $stmt->execute(['no' => $no]);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $oldFiles = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$data) {
+        if (!$oldFiles) {
             echo json_encode(["result" => "fail", "msg" => "정보를 찾을 수 없습니다"]);
             exit;
         }
 
+        // 개별 파일 삭제 처리
         $attach_file_del = $_POST['attach_file_del'] ?? [];
         foreach ($attach_file_del as $val) {
             $fileToDelete = null;
-
             switch ($val) {
-                case "0": $fileToDelete = $data['thumb_image']; break;
-                case "1": $fileToDelete = $data['file_attach_1']; break;
-                case "2": $fileToDelete = $data['file_attach_2']; break;
-                case "3": $fileToDelete = $data['file_attach_3']; break;
-                case "4": $fileToDelete = $data['file_attach_4']; break;
-                case "5": $fileToDelete = $data['file_attach_5']; break;
+                case "0": $fileToDelete = $oldFiles['thumb_image']; break;
+                case "1": $fileToDelete = $oldFiles['file_attach_1']; break;
+                case "2": $fileToDelete = $oldFiles['file_attach_2']; break;
+                case "3": $fileToDelete = $oldFiles['file_attach_3']; break;
+                case "4": $fileToDelete = $oldFiles['file_attach_4']; break;
+                case "5": $fileToDelete = $oldFiles['file_attach_5']; break;
             }
-
             if ($fileToDelete) {
                 imageDelete($UPLOAD_DIR_BOARD . "/" . $fileToDelete);
                 $field = $val === "0" ? "thumb_image" : "file_attach_" . $val;
@@ -178,48 +323,55 @@ else if ($mode == "edit") {
             }
         }
 
-        if ($thumb_image_saved && !empty($data['thumb_image'])) {
-            imageDelete($UPLOAD_DIR_BOARD . "/" . $data['thumb_image']);
+        // 새 썸네일 업로드 시 기존 썸네일 삭제
+        if ($thumb_image_saved && !empty($oldFiles['thumb_image'])) {
+            imageDelete($UPLOAD_DIR_BOARD . "/" . $oldFiles['thumb_image']);
         }
 
+        // 새 첨부 업로드 시 기존 파일 삭제
         for ($i = 1; $i <= 5; $i++) {
             $saved = $fileAttachments["file_attach_{$i}_saved"] ?? null;
-            if ($saved && !empty($data["file_attach_{$i}"])) {
-                imageDelete($UPLOAD_DIR_BOARD . "/" . $data["file_attach_{$i}"]);
+            if ($saved && !empty($oldFiles["file_attach_{$i}"])) {
+                imageDelete($UPLOAD_DIR_BOARD . "/" . $oldFiles["file_attach_{$i}"]);
             }
         }
 
+        // 업데이트 필드 구성 (⬇️ 4개 필드 포함)
         $updateFields = [
-            'board_no' => $board_no,
-            'title' => $title,
-            'contents' => $contents,
-            'is_notice' => $is_notice,
-            'direct_url' => $direct_url,
-            'regdate' => $regdate
+            'board_no'               => $board_no,
+            'title'                  => $title,
+            'write_name'             => $write_name,
+            'contents'               => $contents,
+            'is_notice'              => $is_notice,
+            'direct_url'             => $direct_url,
+            'regdate'                => $regdate,
+            'category_no'            => $category_no, // 기본 0 저장
+
+            'post_description'       => $post_description,
+            'feature_list'           => $feature_list,
+            'feature_description'    => $feature_description,
+            'tech_title_description' => $tech_title_description,
         ];
 
+        // extra1~30 반영
         foreach ($extraFields as $key => $value) {
             $updateFields[$key] = $value;
         }
 
-        if ($category_no) {
-            $updateFields['category_no'] = $category_no;
-        }
-
+        // 선택 항목
         if ($thumb_image_saved) {
             $updateFields['thumb_image'] = $thumb_image_saved;
         }
-
         for ($i = 1; $i <= 5; $i++) {
-            $saved = $fileAttachments["file_attach_{$i}_saved"] ?? null;
+            $saved  = $fileAttachments["file_attach_{$i}_saved"]  ?? null;
             $origin = $fileAttachments["file_attach_{$i}_origin"] ?? null;
-
             if ($saved) {
                 $updateFields["file_attach_{$i}"] = $saved;
                 $updateFields["file_attach_origin_{$i}"] = $origin;
             }
         }
 
+        // 동적 UPDATE 쿼리
         $query = "UPDATE nb_board SET ";
         $query .= implode(", ", array_map(fn($field) => "$field = :$field", array_keys($updateFields)));
         $query .= " WHERE no = :no";
@@ -234,9 +386,14 @@ else if ($mode == "edit") {
             : json_encode(["result" => "fail", "msg" => "처리중 문제가 발생하였습니다.[Error-DB]"]);
 
     } catch (Exception $e) {
-        echo json_encode(["result" => "fail", "msg" => "Exception occurred: " . $e->getMessage()]);
+        echo json_encode(["result" => "fail", "msg" => "Exception occurred: " . $e->getMessage() ]);
     }
-} else if ($mode == "delete") {
+}
+
+
+
+
+else if ($mode == "delete") {
     $no = $_REQUEST['no'];
 
     try {

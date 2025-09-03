@@ -9,15 +9,25 @@ $searchKeyword = $_REQUEST['searchKeyword'] ?? '';
 $searchColumn = $_REQUEST['searchColumn'] ?? '';
 $page = (int)($_REQUEST['page'] ?? 1);
 
-// 게시물 정보 조회
-$query = "SELECT a.*, c.name as category_name  
+// 게시물 정보 조회 (카테고리 + 게시판 관리 정보 조인)
+$query = "SELECT 
+            a.*, 
+            a.title AS board_title,        -- nb_board의 title
+            c.name AS category_name, 
+            m.title AS manage_title        -- nb_board_manage의 title
           FROM nb_board a
-		  LEFT JOIN nb_board_category as c on a.category_no = c.no 
+          LEFT JOIN nb_board_category c
+                 ON a.category_no = c.no
+          LEFT JOIN nb_board_manage m
+                 ON m.no = a.board_no
+                AND m.sitekey = a.sitekey
           WHERE a.no = :no";
 $stmt = $connect->prepare($query);
 $stmt->bindParam(':no', $no, PDO::PARAM_INT);
 $stmt->execute();
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
 
 // 게시물 데이터 확인
 if (!$data) {
@@ -53,7 +63,6 @@ if (!isset($_SESSION['nb_board_view_count'])) {
 $board_title = $board_info[0]['title'] ?? '게시판';
 $go_to_list = "./board.list.php?board_no=" . $board_no . "&RtsearchKeyword=" . urlencode($searchKeyword) . "&RtsearchColumn=" . urlencode($searchColumn) . "&page=" . $page;
 
-
 ?>
 
 <!-- Head -->
@@ -73,17 +82,13 @@ $go_to_list = "./board.list.php?board_no=" . $board_no . "&RtsearchKeyword=" . u
         <input type="hidden" id="no" name="no" value="<?= $no ?>">
         <input type="hidden" id="board_no" name="board_no" value="<?= $board_no ?>">
         <input type="hidden" id="returnUrl" value="">
-        <?php
-			if ($board_no != 9) { 
-				include_once $STATIC_ROOT."/pages/board/view/view.default.php";
-			}
-			?>
 
         <?php
-			if ($board_no == 9) {
-				include_once $STATIC_ROOT."/pages/board/view/view.doctor.php";
+			if ($board_no == 23) { 
+				include_once $STATIC_ROOT."/pages/board/view/view.product.php";
 			}
-			?>
+        ?>
+
     </form>
 </main>
 

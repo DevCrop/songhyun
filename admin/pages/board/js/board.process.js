@@ -1,8 +1,45 @@
 $(document).ready(function () {
+  // 본문 contents
   if ($("#contents").length > 0) {
     $("#contents").summernote({
       lang: "ko-KR",
       height: 500,
+    });
+  }
+
+  // 게시물 설명글
+  if ($("#post_description").length > 0) {
+    $("#post_description").summernote({
+      lang: "ko-KR",
+      height: 300,
+      placeholder: "게시물 설명을 입력하세요.",
+    });
+  }
+
+  // 특징 리스트
+  if ($("#feature_list").length > 0) {
+    $("#feature_list").summernote({
+      lang: "ko-KR",
+      height: 300,
+      placeholder: "줄바꿈으로 구분하여 특징을 입력하세요.",
+    });
+  }
+
+  // 특징 설명글
+  if ($("#feature_description").length > 0) {
+    $("#feature_description").summernote({
+      lang: "ko-KR",
+      height: 300,
+      placeholder: "특징에 대한 상세 설명을 입력하세요.",
+    });
+  }
+
+  // 기술력 타이틀 및 설명글
+  if ($("#tech_title_description").length > 0) {
+    $("#tech_title_description").summernote({
+      lang: "ko-KR",
+      height: 300,
+      placeholder: "기술력 타이틀과 설명을 함께 입력하세요.",
     });
   }
 });
@@ -476,49 +513,27 @@ function doGetBoardField(v) {
       } else if (jsonData.result === "success") {
         $(".extra_fields").remove();
 
-        const textareaFields = [12, 13, 14, 15];
-
         $.each(jsonData.rows, function (key, value) {
           const fieldNum = parseInt(value.fields.replace("extra", ""), 10);
-          const isTextarea = textareaFields.includes(fieldNum);
-          let html = "";
+          console.log(fieldNum);
 
-          if (isTextarea) {
-            html = `
-							<div class="no-admin-block extra_fields">
-								<h3 class="no-admin-title">
-									<label for="${value.fields}">${value.name}</label>
-								</h3>
-								<div class="no-admin-content">
-									<textarea
-										style="height: 15rem"
-										name="${value.fields}"
-										id="${value.fields}"
-										class="no-input--detail"
-										placeholder="${value.name}"
-									>${value.value ?? ""}</textarea>
-								</div>
-							</div>
-						`;
-          } else {
-            html = `
-							<div class="no-admin-block extra_fields">
-								<h3 class="no-admin-title">
-									<label for="${value.fields}">${value.name}</label>
-								</h3>
-								<div class="no-admin-content">
-									<input
-										type="text"
-										name="${value.fields}"
-										id="${value.fields}"
-										value="${value.value ?? ""}"
-										class="no-input--detail"
-										placeholder="${value.name}"
-									/>
-								</div>
-							</div>
-						`;
-          }
+          let html = `
+            <div class="no-admin-block extra_fields">
+              <h3 class="no-admin-title">
+                <label for="${value.fields}">${value.name}</label>
+              </h3>
+              <div class="no-admin-content">
+                <input
+                  type="text"
+                  name="${value.fields}"
+                  id="${value.fields}"
+                  value="${value.value ?? ""}"
+                  class="no-input--detail"
+                  placeholder="${value.name}"
+                />
+              </div>
+            </div>
+          `;
 
           $(".no-admin-field").before(html);
         });

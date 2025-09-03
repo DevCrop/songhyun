@@ -12,7 +12,6 @@ $listCurPage = isset($_POST['page']) ? (int)$_POST['page'] : (isset($_GET['page'
 $pageBlock = 2;
 $count = ($listCurPage - 1) * $perpage;
 
-
 $searchColumn = $_GET['searchColumn'] ?? '';
 $searchKeyword = $_GET['searchKeyword'] ?? '';
 
@@ -37,9 +36,8 @@ $Page = ceil($totalCount / $perpage);
 
 // ======================= 실제 데이터 조회 =======================
 $sql = "
-    SELECT d.*, b.name_kr AS branch_name
+    SELECT d.*
     FROM nb_products d
-    LEFT JOIN nb_branches b ON d.branch_id = b.id
     $where
     ORDER BY d.sort_no ASC
     LIMIT {$count}, {$perpage}
@@ -48,6 +46,7 @@ $stmt = $db->prepare($sql);
 $stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <?php include_once "../../inc/admin.head.php"; ?>
 
@@ -88,56 +87,6 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                             <div class="no-card-body no-admin-column">
 
-                                <!-- 지점 선택 -->
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title">지점</h3>
-                                    <div class="no-admin-content">
-                                        <select name="branch_id" id="branch_category">
-                                            <option value="">전체</option>
-                                            <?php foreach ($branches as $b): ?>
-                                            <option value="<?= $b['id'] ?>"
-                                                <?= ($branch_id ?? '') == $b['id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($b['name_kr']) ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-
-
-                                <div class="no-admin-block">
-                                    <h3 class="no-admin-title">노출 여부</h3>
-                                    <div class="no-admin-content">
-                                        <div class="no-radio-form no-list">
-                                            <!-- 전체 옵션 수동 추가 -->
-                                            <label for="is_active_all">
-                                                <div class="no-radio-box">
-                                                    <input type="radio" name="is_active" id="is_active_all" value=""
-                                                        <?= $active_filter === '' ? 'checked' : '' ?>>
-                                                    <span><i class="bx bx-radio-circle-marked"></i></span>
-                                                </div>
-                                                <span class="no-radio-text">전체</span>
-                                            </label>
-
-                                            <!-- $is_active 반복 -->
-                                            <?php foreach ($is_active as $key => $label): 
-                                                $id = "is_active_$key";
-                                                $checked = ($active_filter !== '' && $active_filter == $key) ? 'checked' : '';
-                                            ?>
-                                            <label for="<?= $id ?>">
-                                                <div class="no-radio-box">
-                                                    <input type="radio" name="is_active" id="<?= $id ?>"
-                                                        value="<?= $key ?>" <?= $checked ?>>
-                                                    <span><i class="bx bx-radio-circle-marked"></i></span>
-                                                </div>
-                                                <span class="no-radio-text"><?= htmlspecialchars($label) ?></span>
-                                            </label>
-                                            <?php endforeach; ?>
-
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <!-- 검색어 -->
                                 <div class="no-admin-block wide">

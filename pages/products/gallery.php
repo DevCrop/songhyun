@@ -25,15 +25,14 @@
             </div>
             <div class="--cnt">
                 <ul>
-                    <?php for($i =1 ; $i < 7; $i++) : ?>
                     <li>
-                        <a href="">
+                        <a href="<?=$ROOT?>/pages/board/board.list.php?board_no=23">
                             <figure>
-                                <img src="<?=$ROOT?>/resource/images/main/main_brand_img_<?=$i?>.jpg" alt="">
+                                <img src="<?=$ROOT?>/resource/images/main/main_brand_img_3.jpg" alt="">
                             </figure>
                             <div class="txt">
                                 <div>
-                                    <h3 class="f-heading-5 --semibold">SCOTSMAN</h3>
+                                    <h3 class="f-heading-5 --semibold">lacimbali</h3>
                                     <p class="f-body-3 --medium"> SCOTSMAN은 상업용 제빙 솔루션에 특화된 브랜드로, 안정적인 생산량과 균일한 얼음 품질로
                                         바쁜
                                         주방과
@@ -48,7 +47,6 @@
                             </div>
                         </a>
                     </li>
-                    <?php endfor; ?>
                 </ul>
             </div>
         </div>

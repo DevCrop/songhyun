@@ -2,7 +2,7 @@
 include_once "../../../inc/lib/base.class.php";
 
 $pageName = "FAQ";
-$depthnum = 7;
+$depthnum = 5;
 
 $db = DB::getInstance();
 
