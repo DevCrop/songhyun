@@ -215,3 +215,33 @@ b {
     }
   }
 }
+
+.answer-status {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+.answer-status.complete {
+  background: var(--clr-primary-def);
+  color: #fff;
+}
+.answer-status.pending {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.--clip-img-wrap {
+  overflow: hidden;
+}
+
+.--clip-img {
+  /* 처음에는 완전히 잘린 상태 (아무것도 안 보임) */
+  clip-path: inset(100% 0 0 0);
+  transform: scale(1.5);
+}
+
+.--mg-t--lg {
+  margin-top: fluid(64, 120);
+}

@@ -43,11 +43,11 @@
     </div>
 </footer>
 
-<div class="no-top-btn ">
-    <a href="">
+<div class="no-top-btn">
+    <a href="<?=$ROOT?>/pages/contact/inquiry.php">
         <i class="fa-solid fa-file-pen"></i>
     </a>
-    <a href="">
+    <a href="tel:02-3443-2036">
         <i class="fa-solid fa-phone"></i>
     </a>
     <button type="button">

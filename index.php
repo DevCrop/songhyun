@@ -14,7 +14,18 @@
 
 <!-- contents -->
 
-
+<div class="no-intro">
+    <div class="wrap">
+        <div class="txt">
+            <span>MIKUN SYSTEM</span>
+        </div>
+        <div class="bg">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
 
 <main class="no-main">
     <section class="no-main-visual">
@@ -22,18 +33,26 @@
             <ul class="swiper-wrapper">
                 <?php for($i = 1; $i < 4 ; $i++) :?>
                 <li class="swiper-slide">
-                    <article>
-                        <img src="/resource/images/main/main_visual_img_<?=$i?>.jpg">
-                    </article>
-                    <div class="no-main-visual-txt">
-                        <div class="">
-                            <span class="lang-en">Eversys</span>
-                            <h2 class="f-heading-2">Decoding the DNA of Coffee</h2>
-                            <p class="f-heading-6">
-                                스위스 기술로 완성한 바리스타 퀄리티
-                            </p>
+                    <a href="#">
+                        <article>
+                            <img src="/resource/images/main/main_visual_img_<?=$i?>.jpg">
+                        </article>
+                        <div class="no-main-visual-txt">
+                            <div class="no-main-visual-txt-wrap">
+                                <div>
+                                    <span class="lang-en">Eversys</span>
+                                </div>
+                                <div>
+                                    <h2 class="f-heading-2">Decoding the DNA of Coffee</h2>
+                                </div>
+                                <div>
+                                    <p class="f-heading-6">
+                                        스위스 기술로 완성한 바리스타 퀄리티
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </li>
                 <?php endfor; ?>
             </ul>
@@ -44,7 +63,7 @@
     </section>
     <section class="no-main-about no-section-md">
         <div class="no-container-xl">
-            <div class="--section-title-with-button">
+            <div class="--section-title-with-button" <?=$aos['middle']?>>
                 <hgroup>
                     <span class="--bold clr-primary-def">WHO WE ARE</span>
                     <h2 class="f-heading-3 clr-text-title">가치를 연결하는 미건시스템</h2>
@@ -56,11 +75,20 @@
                 </div>
             </div>
             <div class="--cnt">
-                <div class="--img">
-                    <img src="<?=$ROOT?>./resource/images/main/main_about_img.jpg" alt="">
+                <div class="--video">
+                    <iframe
+                        src="https://www.youtube.com/embed/97erdf6rPJ0?autoplay=1&mute=1&loop=1&playlist=97erdf6rPJ0"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    </iframe>
                 </div>
-                <div class="--txt">
-                    <h3 class="f-heading-6 clr-text-title">
+                <!--
+                    <div class="--img">
+                    <img src="<?=$ROOT?>./resource/images/main/main_about_img.jpg" alt="">
+                </div>-->
+                <div class="--txt" <?=$aos['fast']?>>
+                    <h3 class="f-heading-5 --semibold clr-text-title">
                         우리는 검증된 브랜드만을 고집합니다
                     </h3>
                     <ul class="--p-list f-body-3">
@@ -81,19 +109,16 @@
                     <div class="no-main-about-card-wrap">
                         <div class="no-main-about-card">
                             <div>
-                                <h4><strong>30</strong></h4>
-                                <p>
-                                    +
-                                </p>
+                                <h4><strong class="counting" data-count="30">00</strong></h4>
+                                <p>+</p>
                             </div>
                             <span>Years of Expertise</span>
                         </div>
+
                         <div class="no-main-about-card">
                             <div>
-                                <h4><strong>06</strong></h4>
-                                <p>
-                                    +
-                                </p>
+                                <h4><strong class="counting" data-count="6">00</strong></h4>
+                                <p>+</p>
                             </div>
                             <span>Global Brands</span>
                         </div>
@@ -104,7 +129,7 @@
     </section>
     <section class="no-main-why no-section-md">
         <div class="no-container-xl">
-            <div class="--section-title">
+            <div class="--section-title" <?=$aos['middle']?>>
                 <hgroup>
                     <span class="--bold clr-primary-def">Why MIKUN SYSTEM</span>
                     <h2 class="f-heading-3 clr-text-title">차이를 만드는 기준</h2>
@@ -112,7 +137,7 @@
             </div>
             <div class="--cnt">
                 <ul>
-                    <li>
+                    <li <?=$aos['fast']?>>
                         <div class="--ld-icon">
                             <lord-icon src="https://cdn.lordicon.com/bvfvqndi.json" trigger="loop"
                                 colors="primary:#333333,secondary:#005baa">
@@ -133,7 +158,7 @@
                             </div>
                         </div>
                     </li>
-                    <li>
+                    <li <?=$aos['fast']?>>
                         <div class="--ld-icon">
                             <lord-icon src="https://cdn.lordicon.com/euaablbm.json" trigger="loop"
                                 colors="primary:#333333,secondary:#005baa">
@@ -153,7 +178,7 @@
                             </div>
                         </div>
                     </li>
-                    <li>
+                    <li <?=$aos['fast']?>>
                         <div class="--ld-icon">
                             <lord-icon src="https://cdn.lordicon.com/lemrzdkt.json" trigger="loop"
                                 colors="primary:#333333,secondary:#005baa">
@@ -179,7 +204,7 @@
     </section>
     <section class="no-main-brands no-section-md">
         <div class="no-container-xl">
-            <div class="--section-title-with-button">
+            <div class="--section-title-with-button" <?=$aos['middle']?>>
                 <hgroup>
                     <span class="--bold clr-primary-def">OUR BRANDS</span>
                     <h2 class="f-heading-3 clr-text-title">최고의 브랜드만을 고집합니다</h2>
@@ -195,8 +220,9 @@
                     <?php for($i =1 ; $i < 7; $i++) : ?>
                     <li>
                         <a href="">
-                            <figure>
-                                <img src="<?=$ROOT?>/resource/images/main/main_brand_img_<?=$i?>.jpg" alt="">
+                            <figure class="--clip-img-wrap">
+                                <img class="--clip-img" src="<?=$ROOT?>/resource/images/main/main_brand_img_<?=$i?>.jpg"
+                                    alt="">
                                 <div class="--pos-logo">
                                     <img src="<?=$ROOT?>/resource/images/logo/brands_logo_<?=$i?>.svg" alt="">
                                 </div>
@@ -212,7 +238,7 @@
     <section class="no-main-contact no-section-md">
         <div class="no-container-xl">
             <div class="--cnt">
-                <div class="left">
+                <div class="left" <?=$aos['middle']?>>
                     <hgroup>
                         <span class="--bold clr-primary-def">Contact Us</span>
                         <h2 class="f-heading-3 clr-text-title">궁금한 점이 있다면 <br>
@@ -241,7 +267,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="right">
+                <div class="right" <?=$aos['fast']?>>
                     <form id="requestForm" method="POST" action="/module/ajax/request.process.php">
                         <fieldset>
                             <legend class="f-body-1">문의 양식</legend>
@@ -322,84 +348,6 @@
 
 </main>
 
-<script>
-async function submitRequestForm(form) {
-    if (!form || form.dataset.busy === "1") return;
-    form.dataset.busy = "1";
-
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const prevText = submitBtn ? submitBtn.textContent : "";
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "전송 중...";
-    }
-
-    try {
-        const fd = new FormData(form);
-
-        const res = await fetch("/module/ajax/request.process.php", {
-            method: "POST",
-            body: fd,
-            credentials: "same-origin",
-            cache: "no-store",
-        });
-
-        let data;
-        const ct = res.headers.get("content-type") || "";
-        if (ct.includes("application/json")) {
-            data = await res.json();
-        } else {
-            const text = await res.text();
-            try {
-                data = JSON.parse(text);
-            } catch {
-                data = {
-                    result: res.ok ? "success" : "fail",
-                    msg: text || "응답 파싱 실패",
-                };
-            }
-        }
-
-        alert(
-            data.msg || (res.ok ? "처리되었습니다." : "처리 중 오류가 발생했습니다.")
-        );
-
-        if (data.result === "success") {
-            // 폼 초기화
-            form.reset();
-
-            // 드롭다운 UI를 쓴다면 표시 텍스트/hidden 값도 초기화 (있을 때만)
-            const firstItem = form.querySelector(".dropdown-menu li");
-            const labelSpan = form.querySelector(".dropdown .select span");
-            const hiddenArea = form.querySelector('input[name="area"]');
-            if (firstItem && labelSpan && hiddenArea) {
-                labelSpan.textContent = firstItem.textContent.trim();
-                hiddenArea.value = firstItem.dataset.value || hiddenArea.value;
-            }
-        }
-    } catch (err) {
-        console.error(err);
-        alert("네트워크 오류가 발생했습니다.");
-    } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = prevText;
-        }
-        form.dataset.busy = "0";
-    }
-}
-
-// 페이지 로드 시 submit 이벤트에 함수 연결
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("requestForm");
-    if (!form) return;
-
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        submitRequestForm(form);
-    });
-});
-</script>
 
 
 <?php include_once $STATIC_ROOT . '/inc/layouts/footer.php'; ?>

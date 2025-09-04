@@ -20,28 +20,29 @@
 <main class="no-sub ">
     <section class="no-sub-head no-section-md">
         <div class="no-container-xl">
-            <div class="--section-sub-title --section-sub-title-with-buttons">
+            <div class="--section-sub-title --section-sub-title-with-buttons" <?=$aos['middle']?>>
                 <h2 class="f-heading-3">Head Quarter</h2>
                 <div class="map-link">
                     <div class="naver">
-                        <a href="#">
+                        <a href="https://naver.me/xMn5xFJC" target="_blank">
                             <img src="<?=$ROOT?>/resource/images/icon/naver.svg" alt="">
                             네이버 지도로 보기</a>
                     </div>
                     <div class="kakao">
-                        <a href="#">
+                        <a href="https://kko.kakao.com/ylNB0VkrX7" target="_blank">
                             <img src="<?=$ROOT?>/resource/images/icon/kakao.svg" alt="">
 
-                            네이버 지도로 보기</a>
+                            카카오 지도로 보기</a>
                     </div>
                 </div>
             </div>
             <div class="--cnt">
-                <div id="daumRoughmapContainer1756802671009" class="root_daum_roughmap root_daum_roughmap_landing map">
+                <div <?=$aos['fast']?> id="daumRoughmapContainer1756802671009"
+                    class="root_daum_roughmap root_daum_roughmap_landing map">
                 </div>
                 <div class="--info">
                     <ul>
-                        <li>
+                        <li <?=$aos['middle']?>>
                             <div class=" --ld-icon-sm">
                                 <lord-icon src="https://cdn.lordicon.com/dugdfixw.json" trigger="loop"
                                     colors="primary:#333333,secondary:#005baa">
@@ -54,7 +55,7 @@
                                 </p>
                             </div>
                         </li>
-                        <li>
+                        <li <?=$aos['middle']?>>
                             <div class=" --ld-icon-sm">
                                 <lord-icon src="https://cdn.lordicon.com/ojbonimq.json" trigger="loop"
                                     colors="primary:#333333,secondary:#005baa">
@@ -68,7 +69,7 @@
 
                             </div>
                         </li>
-                        <li>
+                        <li <?=$aos['middle']?>>
                             <div class=" --ld-icon-sm">
                                 <lord-icon src="https://cdn.lordicon.com/dhzbkemf.json" trigger="loop"
                                     colors="primary:#333333,secondary:#005baa">
@@ -92,14 +93,15 @@
     <section class="no-main-contact no-sub-contact no-section-md">
         <div class="no-container-lg">
             <div class="--cnt">
-                <div class="left">
+                <div class="left" <?=$aos['fast']?>>
                     <hgroup>
                         <h2 class="f-heading-3">Contact Us</h2>
                     </hgroup>
                 </div>
-                <div class="right">
-                    <form method="POST">
+                <div class="right" <?=$aos['middle']?>>
+                    <form id="requestForm" method="POST" action="/module/ajax/request.process.php">
                         <fieldset>
+                            <legend class="f-body-1">문의 양식</legend>
                             <div class="no-form-container --mt-sm">
                                 <div class="no-form-control">
                                     <label for="title">성함 <span class="--require-symbol">*</span></label>
@@ -116,7 +118,7 @@
 
                                 <div class="no-form-control">
                                     <label for="area">
-                                        설치 지역 <span class="--require-symbol">*</span>
+                                        설치 지역 <span class="text-primary-800">*</span>
                                     </label>
                                     <div class="dropdown" tabindex="1">
                                         <div class="select">

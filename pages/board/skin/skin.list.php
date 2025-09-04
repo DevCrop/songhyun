@@ -30,22 +30,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($arrResultSet as $row): 
-                            ?>
+                            <?php foreach ($arrResultSet as $row): ?>
                             <tr class="notice-row">
                                 <td class="notice-cell notice-title">
                                     <a class="f-body-1 --semibold"
                                         href="<?=$ROOT?>/pages/board/board.confirm.php?mode=view&board_no=<?=$board_no?>&no=<?=$row['no']?>">
+                                        <i class="fa-regular fa-lock"></i>
                                         <?= htmlspecialchars($row['title']) ?>
+                                        <?php if ((int)$row['comment_cnt'] > 0): ?>
+                                        <span class="answer-status complete">답변 완료</span>
+                                        <?php else: ?>
+                                        <span class="answer-status pending">답변 대기</span>
+                                        <?php endif; ?>
                                     </a>
+
                                 </td>
-                                <td class="notice-cell notice-date ">
+                                <td class="notice-cell notice-date">
                                     <time datetime="<?= $row['date'] ?>">
-                                        <?= date("Y-m-d", strtotime($row['date'])) ?>
+                                        <?= date("Y-m-d", strtotime($row['regdate'])) ?>
                                     </time>
                                 </td>
                                 <td class="notice-cell notice-views">
-                                    <?= number_format($row['views']) ?>
+                                    <?= number_format($row['read_cnt']) ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -56,20 +62,12 @@
 
                 <div class="no-write-btn">
                     <a href="<?=$ROOT?>/pages/board/board.write.php?board_no=<?=$board_no?>" class="no-btn-primary">
-                        자세히 보기
+                        글 등록하기
                     </a>
                 </div>
 
-                <nav class="no-pagination" aria-label="페이지 네비게이션">
-                    <a href="#" class="--arrow" aria-label="첫 페이지">«</a>
-                    <a href="#" class="--arrow" aria-label="이전 페이지">‹</a>
 
-                    <a href="#">1</a>
-                    <a href="#" class="active">2</a>
-                    <a href="#">3</a>
-                    <a href="#" class="--arrow" aria-label="다음 페이지">›</a>
-                    <a href="#" class="--arrow" aria-label="마지막 페이지">»</a>
-                </nav>
+                <?php include_once $STATIC_ROOT . '/inc/layouts/pagination.php'; ?>
 
             </div>
     </section>

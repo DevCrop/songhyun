@@ -52,10 +52,10 @@ foreach ($specGroups as $section => $indices) {
 <div class="no-sub no-sub-view ">
     <section class="no-sub-product-view no-section-md">
         <div class="no-container-xl">
-            <h2 class="f-heading-2">
+            <h2 class="f-heading-2" <?=$aos['middle']?>>
                 <?=$data['manage_title']?> <?=$data['title']?>
             </h2>
-            <div class="product-view-banner">
+            <div class="product-view-banner" <?=$aos['fast']?>>
                 <figure>
                     <img src="<?= $bannerImg ?>" alt="<?= $bannerAlt ?>">
                 </figure>
@@ -63,20 +63,20 @@ foreach ($specGroups as $section => $indices) {
         </div>
         <div class="product-view-youtube no-section-md">
             <div class="no-container-xl">
-                <div class="desc --tac">
+                <div class="desc --tac" <?=$aos['fast']?>>
                     <?=htmlspecialchars_decode($data['post_description'])?>
                 </div>
-                <figure>
+                <figure <?=$aos['middle']?>>
                     <iframe src="<?=$data['direct_url']?>" title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </figure>
             </div>
         </div>
-        <div class="no-section-md">
+        <div class="--mg-t--lg">
             <div class="no-container-xl">
                 <div class="--cnt">
-                    <div class="left">
+                    <div class="left" <?=$aos['fast']?>>
                         <div class="no-sub-product-view-swiper swiper">
                             <ul class="swiper-wrapper">
                                 <?php foreach ($attachments as $imgSrc): ?>
@@ -100,7 +100,7 @@ foreach ($specGroups as $section => $indices) {
                             </ul>
                         </div>
                     </div>
-                    <div class="right">
+                    <div class="right" <?=$aos['middle']?>>
                         <h3 class="f-heading-3 --bold"><?=$data['manage_title']?> <span
                                 class="clr-primary-def"><?=$data['title']?></span></h3>
                         <div class="info-wrap">

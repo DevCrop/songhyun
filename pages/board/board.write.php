@@ -47,10 +47,10 @@ if ($role_info[0]['role_write'] === "N") {
 <main>
 
     <section class="no-sub-write no-section-md">
-        <div class="no-container-lg">
-            <div class="--section-title-with-button">
+        <div class="no-container-md">
+            <div class="">
                 <hgroup>
-                    <h2 class="f-heading-3 clr-text-title">AS Center</h2>
+                    <h2 class="f-heading-3 clr-text-title --tac">AS Center</h2>
                 </hgroup>
 
             </div>
@@ -83,7 +83,7 @@ if ($role_info[0]['role_write'] === "N") {
 
                     <div class="no-form-control --mt-sm">
                         <label for="contents">내용 <span class="--require-symbol">*</span></label>
-                        <textarea name="contents" id="contents"></textarea>
+                        <textarea name="contents" id="contents" placeholder="내용을 입력해주세요"></textarea>
                     </div>
 
                     <div class="no-form-row --mt-sm">
@@ -100,9 +100,9 @@ if ($role_info[0]['role_write'] === "N") {
                         </div>
                     </div>
 
-                    <div>
+                    <div class="no-btn-wrap">
                         <a href="javascript:void(0);" onclick="history.back();"
-                            class="no-btn-primary no-btn-inquiry">취소하기</a>
+                            class="no-btn-secondary no-btn-inquiry">취소하기</a>
                         <a href="javascript:void(0);" onclick="doBoardSubmit(<?= $isSecret ? 'true' : 'false' ?>)"
                             class="no-btn-primary no-btn-inquiry">확인</a>
                     </div>

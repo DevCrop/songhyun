@@ -115,18 +115,6 @@ $deleteUrl = 'board.confirm.php?' . http_build_query(['mode'=>'delete', 'board_n
         ?>
 
 
-        <div class="no-actions">
-            <a href="board.list.php?<?= http_build_query(['board_no' => $boardNo]) ?>"
-                class="no-btn-primary no-btn-inquiry">목록</a>
-            <?php if ($canEdit): ?>
-            <a href="<?= htmlspecialchars($editUrl, ENT_QUOTES) ?>" class="no-btn-secondary no-btn-inquiry">수정</a>
-            <?php endif; ?>
-
-            <?php if ($canDelete): ?>
-            <a href="<?= htmlspecialchars($deleteUrl, ENT_QUOTES) ?>" class="no-btn-primary no-btn-danger">삭제</a>
-            <?php endif; ?>
-        </div>
-
     </form>
 </main>
 

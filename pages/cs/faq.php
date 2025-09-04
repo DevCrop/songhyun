@@ -2,17 +2,26 @@
 
 <?php
 
-  try {
-      $pdo = DB::getInstance();
 
-      // 원하는 정렬이 있으면 ORDER BY만 조정하세요.
-      $stmt = $pdo->prepare("SELECT * FROM nb_faqs ORDER BY sort_no ASC, id DESC");
-      $stmt->execute();
+try {
+  $pdo = DB::getInstance();
+  $cat = isset($_GET['cat']) ? (int)$_GET['cat'] : 0;
 
-      $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC); // ← 전체 컬럼
-  } catch (Throwable $e) {
-      $faqs = [];
+  if ($cat > 0 && array_key_exists($cat, $faq_categories)) {
+    $stmt = $pdo->prepare("SELECT * FROM nb_faqs WHERE categories = :cat ORDER BY sort_no ASC, id DESC");
+    $stmt->execute([':cat' => $cat]);
+  } else {
+    $stmt = $pdo->prepare("SELECT * FROM nb_faqs ORDER BY sort_no ASC, id DESC");
+    $stmt->execute();
+    $cat = 0; // All
   }
+
+  $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Throwable $e) {
+  $faqs = [];
+  $cat = 0;
+}
+
   
 ?>
 
@@ -32,24 +41,47 @@
 
 <!-- contents -->
 
+
 <main class="no-sub">
     <section class="no-sub-faq no-section-md">
         <div class="no-container-xl">
             <div class="--cnt-wrap">
-                <div class="--section-title-with-button">
+                <div class="--section-title-with-button" <?=$aos['middle']?>>
                     <hgroup>
-                        <h2 class="f-heading-3 clr-text-title">FAQ || 자주 묻는 질문</h2>
+                        <h2 class="f-heading-3 clr-text-title">FAQ</h2>
                     </hgroup>
-
                 </div>
-                <div class="--cnt">
+
+                <div class="--cnt" <?=$aos['fast']?>>
                     <div class="left">
-                        <h4 class="f-heading-4 --semibold">
-                            미건 시스템은 전국적으로 <br>
-                            AS센터를
-                            보유하고 있습니다.</h4>
+                        <h4 class="f-heading-6 --bold">
+                            자주 묻는 질문
+                        </h4>
+                        <p class="mt--sm f-body-2">
+                            미건시스템은 전국에 걸쳐
+                            체계적인 A/S 센터 네트워크를 운영하며,
+                            언제 어디서나 신뢰할 수 있는 서비스를 제공합니다.
+                        </p>
+
+                        <div class="no-categories">
+                            <ul>
+                                <?php
+                                        $self = strtok($_SERVER['REQUEST_URI'], '?');
+                                        // All 버튼
+                                        $active = ($cat === 0) ? ' class="is-active"' : '';
+                                        echo '<li'.$active.'><a href="'.$self.'">All</a></li>';
+
+                                        // 나머지 카테고리 버튼
+                                        foreach ($faq_categories as $id => $label):
+                                            $active = ($cat === $id) ? ' class="is-active"' : '';
+                                            $href = $self . '?cat=' . $id;
+                                    ?>
+                                <li<?=$active?>><a href="<?=$href?>"><?=$label?></a></li>
+                                    <?php endforeach; ?>
+                            </ul>
+                        </div>
                     </div>
-                    <!-- --cnt 내부 -->
+
                     <div class="faq">
                         <ul class="faq-list">
                             <?php foreach ($faqs as $faq): ?>
@@ -69,8 +101,10 @@
                             <?php endforeach; ?>
                         </ul>
                     </div>
+
                 </div>
             </div>
+        </div>
     </section>
 </main>
 

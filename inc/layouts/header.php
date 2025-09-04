@@ -57,3 +57,13 @@ $pageType = (strpos($path, '/pages/') !== false || rtrim($path, '/') === '/pages
             </div>
         </div>
     </header>
+
+
+
+    <?php
+    $aos = [
+            'fast' => 'data-aos="fade-up" data-aos-duration="600"',
+            'middle' => 'data-aos="fade-up" data-aos-duration="1000"',
+            'slow' => 'data-aos="fade-up" data-aos-duration="1600"',
+        ];
+?>

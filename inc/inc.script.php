@@ -23,7 +23,7 @@
 <script src="<?= $ROOT ?>/resource/vendor/lordIcon/lordIcon.min.js"></script>
 
 <!-- FONTAWSOME -->
-
+<script src="/resource/vendor/splitType/splitType.min.js"></script>
 <script src="<?= $ROOT ?>/resource/vendor/fontAwesome/fontAwesome.min.js" crossorigin="anonymous"></script>
 
 <!-- GSAP -->

@@ -21,3 +21,4 @@ class Lisence {
 
 Lisence::add('937e8d5fbb48bd4949536cd65b8d35c426b80d2f830c5c308e2cdec422ae2244');
 Lisence::add("65f209d8f3de23dbaf2e70ba4d59e6a1e1e5d2136bfd83c9ef98e2616cb39656");
+Lisence::add("a8a362a5b54d8547dc1e0c5adb235a47e2b4850fbf7483a6de6b54d611219fd2");

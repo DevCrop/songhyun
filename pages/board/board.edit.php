@@ -127,12 +127,13 @@ if ($role_info[0]['role_edit'] === "N") {
                     </div>
                 </div>
 
-                <div>
+                <div class="no-btn-wrap">
                     <a href="javascript:void(0);" onclick="history.back();"
-                        class="no-btn-primary no-btn-inquiry">취소하기</a>
+                        class="no-btn-secondary no-btn-inquiry">취소하기</a>
                     <a href="javascript:void(0);" onclick="doBoardEditSubmit(<?= $isSecret ? 'true' : 'false' ?>)"
                         class="no-btn-primary no-btn-inquiry">확인</a>
                 </div>
+
             </form>
         </div>
     </div>

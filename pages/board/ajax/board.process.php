@@ -314,7 +314,7 @@ else if ($mode === "comment.save") {
         $stmt->bindValue(':parent_no', (int)$no,            PDO::PARAM_INT);
         $stmt->bindValue(':user_no',   (int)$NO_USR_NO,     PDO::PARAM_INT);
 
-        $stmt->bindValue(':write_name', $NO_USR_NAME, PDO::PARAM_STR); // ← 필요 시 $write_name 로 변경
+        $stmt->bindValue(':write_name', $write_name, PDO::PARAM_STR);
 
         $stmt->bindValue(':contents',  $comment,            PDO::PARAM_STR);
 

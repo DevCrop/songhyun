@@ -258,7 +258,7 @@ try {
                                         </li>
                                     </ul>
                                     <?php endif; ?>
-									<span>총 <?=$totalCnt?>개</span>	
+                                    <span>총 <?=$totalCnt?>개</span>
                                 </div>
 
                                 <div class="no-table-responsive">
@@ -315,21 +315,20 @@ try {
                                                 </td>
 
                                                 <td class="sort-btn-group">
-                                                    <!-- sort_no가 클수록 위니까 버튼 누르면 sort_no를 크게/작게 조절 -->
-                                                 
+
                                                     <button type="button" class="sort-btn" data-id="<?= $v['no'] ?>"
                                                         data-action="down" data-no="<?= $v['sort_no'] - 1 ?>">
-														 <i class='bx bx-chevron-up'></i>
+                                                        <i class='bx bx-chevron-up'></i>
                                                     </button>
-													<button type="button" class="sort-btn" data-id="<?= $v['no'] ?>"
+                                                    <button type="button" class="sort-btn" data-id="<?= $v['no'] ?>"
                                                         data-action="up" data-no="<?= $v['sort_no'] + 1 ?>">
-														<i class='bx bx-chevron-down'></i>
+                                                        <i class='bx bx-chevron-down'></i>
                                                     </button>
                                                     <button type="button" class="sort-btn" data-id="<?= $v['no'] ?>"
                                                         data-action="last" data-no="1">
-														 <i class='bx bx-chevrons-up'></i>
+                                                        <i class='bx bx-chevrons-up'></i>
                                                     </button>
-													  <button type="button" class="sort-btn" data-id="<?= $v['no'] ?>"
+                                                    <button type="button" class="sort-btn" data-id="<?= $v['no'] ?>"
                                                         data-action="first" data-no="<?= $totalCnt ?>">
                                                         <i class='bx bx-chevrons-down'></i>
                                                     </button>
@@ -345,6 +344,8 @@ try {
                                                         <div class="no-table-action">
                                                             <a href="./board.view.php?no=<?= $v['no'] ?>&<?= $searchParam ?>"
                                                                 class="no-btn no-btn--sm no-btn--normal"> 보기</a>
+                                                            <a href="./board.comment.view.php?no=<?= $v['no'] ?>&<?= $searchParam ?>"
+                                                                class="no-btn no-btn--sm no-btn--normal"> 댓글</a>
                                                             <?php if($role->canDelete()) : ?>
                                                             <a href="javascript:doDelete(<?= $v['no'] ?>);"
                                                                 class="no-btn no-btn--sm no-btn--delete-outline">삭제</a>

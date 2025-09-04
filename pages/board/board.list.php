@@ -90,6 +90,7 @@ $dataQuery = "
     ORDER BY a.is_notice='Y' DESC, a.sort_no ASC
     LIMIT {$paginator->getOffset()}, {$paginator->getLimit()}
 ";
+
 $stmt = $connect->prepare($dataQuery);
 $stmt->execute($params);
 $arrResultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);

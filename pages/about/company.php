@@ -20,27 +20,29 @@
 
             <div class="--cnt">
                 <div class="txt">
-                    <div class="--section-sub-title">
+                    <div class="--section-sub-title" <?=$aos['middle']?>>
                         <h2 class="f-heading-3">Overview</h2>
                     </div>
-                    <h3 class="clr-primary-def f-heading-6">국내 음료 장비 유통의 중심</h3>
-                    <div class="--p-list">
-                        <p>
-                            당사는 1982년 ㈜미건실업으로 설립되어, 미국의 제빙기 전문 제조회사인 SCOTSMAN(스카츠맨) 브랜드를 국내에 독점 공급하며,
-                            고품질 제빙기 유통을 통해 국내 시장을 선도해왔습니다.
-                        </p>
-                        <p>
-                            1999년, ㈜미건시스템으로 사명을 변경한 이후 변화하는
-                            국내 유통 환경에 발맞춰 커피 기기를 비롯한 차별화된 프리미엄
-                            음료 장비와 솔루션을 공급하고 있습니다.
-                        </p>
-                        <p>
-                            고객 만족을 최우선 가치로 삼아, 신뢰받는 A/S 체계와 전문 기술
-                            지원 서비스를 통해 지속 가능한 파트너십을 구축해가고 있습니다.
-                        </p>
+                    <div <?=$aos['fast']?>>
+                        <h3 class="clr-primary-def f-heading-6">국내 음료 장비 유통의 중심</h3>
+                        <div class="--p-list">
+                            <p>
+                                당사는 1982년 ㈜미건실업으로 설립되어, 미국의 제빙기 전문 제조회사인 SCOTSMAN(스카츠맨) 브랜드를 국내에 독점 공급하며,
+                                고품질 제빙기 유통을 통해 국내 시장을 선도해왔습니다.
+                            </p>
+                            <p>
+                                1999년, ㈜미건시스템으로 사명을 변경한 이후 변화하는
+                                국내 유통 환경에 발맞춰 커피 기기를 비롯한 차별화된 프리미엄
+                                음료 장비와 솔루션을 공급하고 있습니다.
+                            </p>
+                            <p>
+                                고객 만족을 최우선 가치로 삼아, 신뢰받는 A/S 체계와 전문 기술
+                                지원 서비스를 통해 지속 가능한 파트너십을 구축해가고 있습니다.
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <div class="img">
+                <div class="img" <?=$aos['middle']?>>
                     <figure>
                         <img src="<?=$ROOT?>/resource/images/sub/sub_overview_img.jpg" alt="">
                     </figure>
@@ -50,10 +52,10 @@
     </section>
     <section class="no-sub-ceo no-section-md">
         <div class="no-container-xl">
-            <div class="--section-sub-title">
+            <div class="--section-sub-title" <?=$aos['middle']?>>
                 <h2 class="f-heading-3 --tac">CEO Message</h2>
             </div>
-            <div class="--cnt">
+            <div class="--cnt" <?=$aos['fast']?>>
                 <div class="img">
                     <figure>
                         <img src="<?=$ROOT?>/resource/images/sub/sub_ceo_img.jpg" alt="">
@@ -85,10 +87,10 @@
     </section>
     <section class="no-sub-history no-section-md">
         <div class="no-container-xl">
-            <div class="--section-sub-title-border">
+            <div class="--section-sub-title-border" <?=$aos['middle']?>>
                 <h2 class="f-heading-3">Our Journey </h2>
             </div>
-            <div class="--cnt">
+            <div class="--cnt" <?=$aos['fast']?>>
                 <ul class="--year-list">
                     <li>
                         <h5 class="f-heading-4">2024</h5>
@@ -178,10 +180,10 @@
 
     <section class="no-sub-showroom no-section-md">
         <div class="no-container-xl">
-            <div class="--section-sub-title">
+            <div class="--section-sub-title" <?=$aos['middle']?>>
                 <h2 class="f-heading-3">MIKUN Showroom</h2>
             </div>
-            <div class="--cnt">
+            <div class="--cnt" <?=$aos['fast']?>>
                 <div class="no-sub-showroom-swiper swiper">
                     <ul class="swiper-wrapper">
                         <?php for ($i= 1; $i< 4; $i++) : ?>
