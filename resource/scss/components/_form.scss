@@ -7,23 +7,22 @@ textarea {
   padding: 0 fluid(10, 16);
   width: 100%;
   height: fluid(36, 60);
-  border-bottom: 1px solid var(--clr-border-white-strong);
+  box-shadow: 0px 0px 3px 0px rgba(0, 27, 55, 0.16);
+  border-radius: fluid(4, 8);
+  transition: ease all 0.3s;
+  &:focus {
+    box-shadow: 0px 0px 3px 0px rgba(0, 27, 55, 0.36);
+  }
 }
 
 .no-form-label {
   display: flex;
-
   align-self: center;
-
   justify-content: space-between;
-
   gap: 0.8rem;
-
   margin-bottom: 0.8rem;
-
   width: 100%;
 }
-
 .no-form-control {
   label {
     display: flex;
@@ -35,16 +34,18 @@ textarea {
     background: none;
     width: 100%;
     height: fluid(36, 60);
-    border-bottom: 1px solid var(--clr-border-white-strong);
-    color: #fff;
+    box-shadow: 0px 0px 3px 0px rgba(0, 27, 55, 0.16);
+    border-radius: fluid(4, 8);
+    transition: ease all 0.3s;
     &:focus {
-      border-color: var(--clr-primary-def);
+      box-shadow: 0px 0px 3px 0px rgba(0, 27, 55, 0.36);
     }
   }
 
   textarea {
     height: fluid(160, 320);
     display: block;
+    padding: fluid(10, 16);
   }
 
   &.--full {
@@ -63,8 +64,12 @@ textarea {
   max-width: 420px;
   border-bottom: 2px solid var(--clr-border-strong);
   overflow: hidden;
-  @include mq(sm) {
+  @include mq(md) {
     max-width: none;
+    border-bottom: none;
+    border-radius: 1rem;
+    border: 1px solid var(--clr-border-default);
+    padding: 0 fluid(12, 24);
   }
   input {
     flex: 1;
@@ -205,10 +210,16 @@ textarea {
   }
   button {
     text-decoration: underline;
-    color: #fff;
   }
 }
 
+form {
+}
+fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: fluid(12, 24);
+}
 .no-form-row {
   display: flex;
   align-items: center;
@@ -224,8 +235,9 @@ textarea {
   gap: fluid(6, 12);
   align-items: center;
   figure {
+    border-radius: fluid(4, 8);
     height: var(--input-height);
-    border: 1px solid var(--clr-border-white-strong);
+    background: var(--clr-primary-def);
     @include flex-center();
     width: fluid(80, 120);
     flex-shrink: 0;
@@ -234,13 +246,12 @@ textarea {
     width: fluid(36, 60);
     flex-shrink: 0;
     height: var(--input-height);
-    color: #fff;
-    border: 1px solid var(--clr-border-white-strong);
+    background: #fafafa;
+    color: var(--clr-text-desc);
+    border-radius: fluid(4, 8);
   }
   input {
     height: var(--input-height);
-    border-bottom: 1px solid var(--clr-border-white-strong);
-    background: transparent;
   }
 }
 .dropdown {

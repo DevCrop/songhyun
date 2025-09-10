@@ -7,12 +7,12 @@
 
   justify-content: center;
 
-  gap: 0.8rem;
+  gap: fluid(6, 8);
 
   a {
     width: fluid(24, 36);
-
     height: fluid(24, 36);
+    flex-shrink: 0;
     border-radius: 4rem;
     @include flex-center();
 

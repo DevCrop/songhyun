@@ -71,6 +71,7 @@
   top: 50%;
   transform: translate(50%, -50%);
   width: fluid(240, 800);
+  z-index: -1;
   height: 100%;
   background: radial-gradient(
     circle farthest-corner at 50% 50%,
@@ -147,6 +148,12 @@
   justify-content: space-between;
   border-bottom: 1px solid var(--clr-border-default);
   margin-top: fluid(12, 24);
+  @include mq(md) {
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: none;
+    gap: fluid(12, 16);
+  }
 }
 
 .--section-sub-title {
@@ -285,6 +292,7 @@ b {
       text-decoration: none;
       transition: ease all 0.3s;
       font-weight: 500;
+      border-radius: fluid(4, 8);
       img {
         width: fluid(18, 24);
       }

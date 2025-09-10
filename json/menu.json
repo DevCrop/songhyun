@@ -67,11 +67,11 @@
     },
     {
       "title": "고객 문의",
-      "dirname": "inquiry",
+      "dirname": "contact",
       "pages": [
         {
-          "title": "contact",
-          "filename": "list"
+          "title": "inquiry",
+          "filename": "inquiry"
         }
       ]
     }

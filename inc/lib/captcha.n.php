@@ -7,16 +7,20 @@ header('Cache-Control: post-check=0, pre-check=0', false);
 header('Pragma: no-cache');
 header('Expires: 0');
 
-// === 아래는 기존 이미지 생성 로직 ===
+// === 이미지 생성 ===
 $image = imagecreatetruecolor(120, 30);
 if (!$image) { exit; }
 
 imagealphablending($image, false);
 imagesavealpha($image, true);
-$transparent = imagecolorallocatealpha($image, 0, 0, 0, 127);
-imagefill($image, 0, 0, $transparent);
+
+$bg = imagecolorallocatealpha($image, 7, 107, 55, 0); 
+
+
+imagefill($image, 0, 0, $bg);
 imagealphablending($image, true);
 
+// 텍스트 색상 (흰색)
 $textcolor = imagecolorallocatealpha($image, 255, 255, 255, 0);
 
 $digit = '';

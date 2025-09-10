@@ -10,6 +10,7 @@
   height: var(--input-height);
   text-transform: uppercase;
   color: var(--clr-ui-white);
+  border-radius: fluid(4, 8);
   @include mq(md) {
     padding: 0.4rem 1.2rem;
   }
@@ -119,6 +120,136 @@
   width: 100%;
 }
 
+/* === 파일 업로드 === */
+.file-upload {
+  position: relative;
+}
+
+.file-upload input[type="file"] {
+  position: absolute;
+  inset: 0; /* top/right/bottom/left:0 */
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* 드롭존 비주얼 */
+.file-upload .dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 140px;
+  padding: 20px;
+  border: 1px dashed var(--clr-border-default);
+  border-radius: fluid(4, 8);
+  background: #fafafa;
+  color: var(--clr-text-title);
+  text-align: center;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.05s ease;
+  box-shadow: var(--shadow-sm);
+  z-index: 1;
+}
+
+.file-upload .dz-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+.file-upload .dz-text {
+  font-size: 15px;
+}
+.file-upload .dz-sub {
+  font-size: 12px;
+  color: var(--clr-text-muted);
+}
+
+/* hover/active/keyboard focus 피드백 */
+.file-upload:hover .dropzone {
+  border-color: var(--clr-primary-def);
+  background: color-mix(
+    in srgb,
+    var(--clr-primary-def) 10%,
+    var(--clr-bg-soft)
+  );
+  box-shadow: var(--shadow-md);
+}
+.file-upload:active .dropzone {
+  transform: scale(0.995);
+}
+
+/* input이 포커스 되었을 때 접근성 포커스 링 */
+.file-upload:focus-within .dropzone {
+  border-color: var(--clr-primary-def);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--clr-primary-def) 20%, transparent),
+    var(--shadow-md);
+}
+
+/* 파일 리스트 */
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.file-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--clr-border-default);
+  border-radius: fluid(4, 8);
+  background: #fafafa;
+  color: var(--clr-text-title);
+}
+
+.file-list .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 14px;
+}
+
+.file-list .remove {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--clr-border-default);
+  background: transparent;
+  color: var(--clr-text-muted);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.05s ease;
+}
+
+.file-list .remove:hover {
+  background: var(--clr-bg-soft);
+  color: var(--clr-text-title);
+  border-color: var(--clr-primary-def);
+}
+.file-list .remove:active {
+  transform: scale(0.98);
+}
+
 .no-top-btn {
   position: fixed;
   right: fluid(16, 32);
@@ -181,17 +312,24 @@
   margin-top: fluid(12, 24);
   ul {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
+    @include mq(md) {
+      gap: fluid(8, 12);
+    }
     li {
       &.is-active {
         a {
           border-bottom: 2px solid #000;
           color: var(--clr-text-title);
+          @include mq(md) {
+            border-bottom: none;
+            background: #000;
+            color: var(--clr-ui-white);
+          }
         }
       }
       a {
-        padding: 1rem 2rem;
+        padding: fluid(4, 8) fluid(8, 24);
         border-bottom: 2px solid var(--clr-border-default);
         color: var(--clr-text-desc);
         display: inline-block;
@@ -200,6 +338,11 @@
         font-weight: 500;
         &:hover {
           border-bottom: 2px solid var(--clr-border-strong);
+        }
+        @include mq(md) {
+          border-bottom: none;
+          border: 1px solid var(--clr-border-default);
+          border-radius: 5rem;
         }
       }
     }
@@ -325,9 +468,8 @@
       display: none;
       position: absolute;
       top: 100%;
-      left: 0;
+      left: -100%;
       background: #fff;
-      border: 1px solid var(--clr-border-default);
       border-radius: 4px;
       min-width: 24rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -336,7 +478,8 @@
       li {
         &.active {
           a {
-            background: #fafafa;
+            background: var(--clr-primary-def);
+            color: #fff;
           }
         }
       }
