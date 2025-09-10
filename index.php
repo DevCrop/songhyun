@@ -17,7 +17,7 @@
 <div class="no-intro">
     <div class="wrap">
         <div class="txt">
-            <span>MIKUN SYSTEM</span>
+            <span>SONGHYUN INVEST.</span>
         </div>
         <div class="bg">
             <div></div>
@@ -39,17 +39,11 @@
                         </article>
                         <div class="no-main-visual-txt">
                             <div class="no-main-visual-txt-wrap">
-                                <div>
-                                    <span class="lang-en">Eversys</span>
-                                </div>
-                                <div>
-                                    <h2 class="f-heading-2">Decoding the DNA of Coffee</h2>
-                                </div>
-                                <div>
-                                    <p class="f-heading-6">
-                                        스위스 기술로 완성한 바리스타 퀄리티
-                                    </p>
-                                </div>
+                                <span class="f-display-1 ">
+                                    GROWTH <br>
+                                    TRUST <br>
+                                    INTEGRITY
+                                </span>
                             </div>
                         </div>
                     </a>
@@ -57,184 +51,283 @@
                 <?php endfor; ?>
             </ul>
             <div class="no-main-visual-pagination-container">
-                <div class="swiper-pagination"></div>
+                <div>
+                    <button class="swiper-button-prev swiper-button">
+                        <i class="fa-sharp fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="swiper-pagination"></div>
+                    <button class="swiper-button-next swiper-button">
+                        <i class="fa-sharp fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
+
         </div>
     </section>
     <section class="no-main-about no-section-md">
         <div class="no-container-xl">
-            <div class="--section-title-with-button" <?=$aos['middle']?>>
-                <hgroup>
-                    <span class="--bold clr-primary-def">WHO WE ARE</span>
-                    <h2 class="f-heading-3 clr-text-title">가치를 연결하는 미건시스템</h2>
-                </hgroup>
-                <div>
-                    <a href="#" class="no-btn-primary">
-                        자세히 보기
+            <div class="--section-title-with-button --main-section-title">
+                <div class="txt">
+                    <hgroup>
+                        <h2 class="f-heading-2 clr-text-title"><span class="clr-primary-def">SONGHYUN</span> INVEST.
+                        </h2>
+                    </hgroup>
+                    <p class="f-heading-5 --medium">
+                        평균 19년의 경험과 검증된 성과를 바탕으로 <br>
+                        정직한 원칙과 함께 기업의 지속 성장을 이끌어갑니다.
+                    </p>
+                </div>
+                <div class="button">
+                    <a href="#" class="no-btn-arrow no-btn-arrow--default">
+                        <span>VIEW MORE</span>
+                        <i class="fa-sharp fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
             <div class="--cnt">
-                <div class="--video">
-                    <iframe
-                        src="https://www.youtube.com/embed/97erdf6rPJ0?autoplay=1&mute=1&loop=1&playlist=97erdf6rPJ0"
-                        title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                    </iframe>
-                </div>
-                <!--
-                    <div class="--img">
-                    <img src="<?=$ROOT?>./resource/images/main/main_about_img.jpg" alt="">
-                </div>-->
-                <div class="--txt" <?=$aos['fast']?>>
-                    <h3 class="f-heading-5 --semibold clr-text-title">
-                        우리는 검증된 브랜드만을 고집합니다
-                    </h3>
-                    <ul class="--p-list f-body-3">
-                        <li>
-                            <p>
-                                미건시스템은 단지 제품을 유통하는 회사를 넘어, 고객의 비즈니스에 가장 적합한 해답을
-                                제시하는 브랜드 큐레이터입니다. 우리는 글로벌 시장에서 품질과 성능이 검증된 브랜드만을
-                            </p>
-                        </li>
-                        <li>
-                            <p>
-                                엄선하며, 단순한 인기나 가격 경쟁력이 아닌, 장비의 내구성, 기술력, 브랜드 철학, 그리고
-                                실제 운용의 효율성까지 깊이 있게 분석하고 경험해본 후 선택합니다. 우리는 당장의 선택보다,
-                                오랜 시간 신뢰할 수 있는 브랜드만을 제안합니다.
-                            </p>
-                        </li>
-                    </ul>
-                    <div class="no-main-about-card-wrap">
-                        <div class="no-main-about-card">
-                            <div>
-                                <h4><strong class="counting" data-count="30">00</strong></h4>
-                                <p>+</p>
-                            </div>
-                            <span>Years of Expertise</span>
-                        </div>
 
-                        <div class="no-main-about-card">
-                            <div>
-                                <h4><strong class="counting" data-count="6">00</strong></h4>
-                                <p>+</p>
-                            </div>
-                            <span>Global Brands</span>
+                <div class="no-main-about-card-wrap">
+                    <div class="no-main-about-card">
+                        <span class="f-heading-5 --medium"> <i class="fa-regular fa-calendar-clock"></i>평균 운용 경력</span>
+                        <div>
+                            <h4><strong class="counting" data-count="2012">00</strong></h4>
+                            <p> 년</p>
+                        </div>
+                    </div>
+
+                    <div class="no-main-about-card">
+                        <span class="f-heading-5 --medium"> <i class="fa-regular fa-building-magnifying-glass"></i>IPO
+                            RATIO</span>
+
+                        <div>
+                            <h4><strong class="counting" data-count="33">00</strong></h4>
+                            <p>%</p>
+                        </div>
+                    </div>
+                    <div class="no-main-about-card">
+                        <span class="f-heading-5 --medium">
+                            <i class="fa-solid fa-money-bill"></i>
+                            전체 펀드 수
+                        </span>
+                        <div>
+                            <h4><strong class="counting" data-count="10">00</strong></h4>
+                            <p>개</p>
+                        </div>
+                    </div>
+                    <div class="no-main-about-card">
+                        <span class="f-heading-5 --medium">
+                            <i class="fa-regular fa-money-bill-trend-up"></i>
+                            AUM
+                        </span>
+                        <div>
+                            <h4><strong class="counting" data-count="3572">00</strong></h4>
+                            <p>억</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <section class="no-main-why no-section-md">
-        <div class="no-container-xl">
-            <div class="--section-title" <?=$aos['middle']?>>
-                <hgroup>
-                    <span class="--bold clr-primary-def">Why MIKUN SYSTEM</span>
-                    <h2 class="f-heading-3 clr-text-title">차이를 만드는 기준</h2>
-                </hgroup>
-            </div>
-            <div class="--cnt">
-                <ul>
-                    <li <?=$aos['fast']?>>
-                        <div class="--ld-icon">
-                            <lord-icon src="https://cdn.lordicon.com/bvfvqndi.json" trigger="loop"
-                                colors="primary:#333333,secondary:#005baa">
-                            </lord-icon>
-                        </div>
-                        <div class="txt">
-                            <h4 class="f-heading-5">검증된 퀄리티</h4>
-                            <p>
-                                미건시스템은 단순한 유통이 아닌 <br>
-
-                                품질·성능·브랜드 철학까지 분석한 <br>
-                                <b>최고의 장비</b>만을 선별하여 유통합니다.
-                            </p>
-                            <div class="link">
-                                <a href="#" class="no-btn-primary">
-                                    자세히 보기
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                    <li <?=$aos['fast']?>>
-                        <div class="--ld-icon">
-                            <lord-icon src="https://cdn.lordicon.com/euaablbm.json" trigger="loop"
-                                colors="primary:#333333,secondary:#005baa">
-                            </lord-icon>
-                        </div>
-                        <div class="txt">
-                            <h4 class="f-heading-5">처음부터 끝까지</h4>
-                            <p>
-                                설치, 운영, 교육, A/S까지 <br>
-                                전 과정 지원을 지원하며 고객의 <br>
-                                환경에 맞춘 컨설팅을 제안합니다
-                            </p>
-                            <div class="link">
-                                <a href="#" class="no-btn-primary">
-                                    자세히 보기
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                    <li <?=$aos['fast']?>>
-                        <div class="--ld-icon">
-                            <lord-icon src="https://cdn.lordicon.com/lemrzdkt.json" trigger="loop"
-                                colors="primary:#333333,secondary:#005baa">
-                            </lord-icon>
-                        </div>
-                        <div class="txt">
-                            <h4 class="f-heading-5">전국 AS 인프라 구축</h4>
-                            <p>
-                                30년간 쌓아온 노하우와 기술력으로 <br>
-                                전국 어디서든 빠르고 정확한 <br>
-                                유지보수와 기술 지원을 제공합니다.
-                            </p>
-                            <div class="link">
-                                <a href="#" class="no-btn-primary">
-                                    자세히 보기
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+        <div class="--gradient"></div>
+        <div class="--big-typo">
+            <span>GROWTH TRUST INTEGRITY</span>
         </div>
     </section>
-    <section class="no-main-brands no-section-md">
+
+    <?php
+        $principals = [
+            [
+                'img' => 'main_principal_img_1.jpg',
+                'title' => '동행',
+                'desc' => '창업과 스타트업 대표가 걷는길은 외롭고도 험난한 길입니다. 
+                        송현인베스트먼트는 외롭고도 험난한 그길을 함께 동행하는 
+                        든든한 동반자가 되고자 합니다.',
+            ],
+            [
+                'img' => 'main_principal_img_2.jpg',
+                'title' => '야망과 집요함',
+                'desc' => '스타트업의 가치는 대표자가 꾸는 꿈의 크기 만큼 올라간다 합니다. 
+                        송현은 스타트업의 원대한 꿈과 그 꿈을 이루기 위한 집요함에 투자합니다.',
+            ],
+            [
+                'img' => 'main_principal_img_3.jpg',
+                'title' => 'NETWORK',
+                'desc' => '송현의 구성원은 다양한 백그라운드를 가지고 있습니다. 
+                        스타트업에게 실질적인 도움이 될수 있는 NETWORK를 제공합니다.',
+            ],
+            [
+                'img' => 'main_principal_img_4.jpg',
+                'title' => 'INTEGRITY',
+                'desc' => '어려움을 솔직하게 이야기하는 스타트업을 돕습니다. 
+                        송현도 또한 운용사에 걸맞는 진정성을 가지고 스타트업에 다가갑니다.',
+            ],
+        ];
+    ?>
+
+    <section class="no-main-principal no-section-md">
         <div class="no-container-xl">
-            <div class="--section-title-with-button" <?=$aos['middle']?>>
-                <hgroup>
-                    <span class="--bold clr-primary-def">OUR BRANDS</span>
-                    <h2 class="f-heading-3 clr-text-title">최고의 브랜드만을 고집합니다</h2>
-                </hgroup>
-                <div>
-                    <a href="#" class="no-btn-primary">
-                        자세히 보기
+            <article>
+                <div class="--main-section-title">
+                    <div class="txt">
+                        <hgroup>
+                            <h2 class="f-heading-2 clr-text-title">
+                                PRINCIPLES OF <br>
+                                <span class="clr-primary-def"> INVESTMENT</span>
+                            </h2>
+                        </hgroup>
+                        <p class="f-heading-5 --medium">
+                            송현은 다년간의 경험과 성과를 토대로 <br>
+                            투자의 본질을 지키며 기업의 미래 성장을 견인합니다.
+                        </p>
+                    </div>
+                </div>
+                <div class="--cnt">
+                    <ul>
+                        <?php foreach ($principals as $p): ?>
+                        <li>
+                            <figure>
+                                <img src="<?=$ROOT?>/resource/images/main/<?=$p['img']?>" alt="">
+                            </figure>
+                            <div class="txt">
+                                <h4 class="f-heading-5"><?=$p['title']?></h4>
+                                <p><?=$p['desc']?></p>
+                            </div>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </article>
+        </div>
+    </section>
+    <section class="no-main-best no-section-md">
+        <div class="no-container-xl">
+            <div class="--section-title-with-button --section-title-line --main-section-title">
+                <div class="txt">
+                    <hgroup>
+                        <h2 class="f-heading-2 clr-text-title">
+                            BEST PORTFOLIO
+                        </h2>
+                    </hgroup>
+                </div>
+                <div class="button">
+                    <a href="#" class="no-btn-arrow no-btn-arrow--default">
+                        <span>VIEW MORE</span>
+                        <i class="fa-sharp fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
             <div class="--cnt">
                 <ul>
-                    <?php for($i =1 ; $i < 7; $i++) : ?>
+                    <?php for($i =1 ; $i<7; $i++) :?>
                     <li>
-                        <a href="">
-                            <figure class="--clip-img-wrap">
-                                <img class="--clip-img" src="<?=$ROOT?>/resource/images/main/main_brand_img_<?=$i?>.jpg"
-                                    alt="">
-                                <div class="--pos-logo">
-                                    <img src="<?=$ROOT?>/resource/images/logo/brands_logo_<?=$i?>.svg" alt="">
-                                </div>
-
+                        <a href="#">
+                            <figure>
+                                <img src="<?=$ROOT?>/resource/images/main/main_best_img_<?=$i?>.jpg" alt="">
                             </figure>
+                            <div class="txt">
+                                <div class="title">
+                                    <h4 class="f-heading-5">클로버츄얼패션</h4>
+                                    <img src="<?=$ROOT?>/resource/images/logo/best_logo_<?=$i?>.png" alt="">
+                                </div>
+                                <p class="f-body-1 --medium">3D 시뮬레이션 분야에서 성과를 거둔 기업입니다.</p>
+                            </div>
+                            <div class="tag">
+                                <ul class="--tags">
+                                    <li>3d</li>
+                                    <li>simulation</li>
+                                    <li>fashiontech</li>
+                                </ul>
+                            </div>
                         </a>
                     </li>
-                    <?php endfor; ?>
+                    <?php endfor;?>
+                </ul>
+            </div>
+        </div>
+
+    </section>
+
+
+    <section class="no-main-insights no-section-md ">
+        <div class="no-container-xl">
+            <div class="--section-title-with-button --section-title-line --main-section-title">
+                <div class="txt">
+                    <hgroup>
+                        <h2 class="f-heading-2 clr-text-title">
+                            INSIGHTS
+                        </h2>
+                    </hgroup>
+                </div>
+                <div class="button">
+                    <a href="#" class="no-btn-arrow no-btn-arrow--default">
+                        <span>VIEW MORE</span>
+                        <i class="fa-sharp fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="--cnt">
+                <div class="tabs">
+                    <ul>
+                        <li class="active">
+                            <button type="button">News</button>
+                        </li>
+                        <li>
+                            <button type="button">Notice</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="contents">
+                    <ul>
+                        <?php for($i=1; $i<6; $i++) :?>
+                        <li>
+                            <a href="">
+                                <div class="txt">
+                                    <p class="f-heading-5">신규 펀드 결성 안내 - 재도약펀드 260억 규모</p>
+                                    <time datetime="2024.07.15">2024.07.15</time>
+                                </div>
+                                <div class="arrow">
+                                    <i class="fa-sharp fa-solid fa-arrow-right"></i>
+                                </div>
+                            </a>
+                        </li>
+                        <?php endfor;?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="no-main-partners no-section-md">
+        <div class="no-container-xl">
+            <div class="--section-title-with-button --section-title-line --main-section-title">
+                <div class="txt">
+                    <hgroup>
+                        <h2 class="f-heading-2 clr-text-title">
+                            PARTNERS
+                        </h2>
+                    </hgroup>
+                </div>
+                <p class="f-body-1">
+                    우리는 스타트업부터 글로벌 기업까지 다양한 파트너와 협력하며, <br>
+                    혁신을 키우고 산업을 강화하고, 장기적인 성공을 위한 기반을 다져갑니다.
+                </p>
+            </div>
+            <div class="--cnt">
+                <ul>
+                    <?php for($i = 1; $i < 20; $i++) :?>
+                    <li>
+                        <figure>
+                            <img src="<?=$ROOT?>/resource/images/logo/logo_partners_img_<?=$i?>.png" alt="">
+                        </figure>
+                    </li>
+                    <?php endfor;?>
                 </ul>
             </div>
         </div>
     </section>
+    <?php include_once $STATIC_ROOT . '/inc/layouts/contact.php'; ?>
+    <!--
     <section class="no-main-contact no-section-md">
         <div class="no-container-xl">
             <div class="--cnt">
@@ -342,7 +435,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section>-->
 
 
 

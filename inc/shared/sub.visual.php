@@ -8,8 +8,8 @@ $eng_desc = '';
 
 if ($cur_gnb === '회사 소개') {
     $img_path = '1';
-    $eng_title = 'About Us';
-    $eng_desc = "미건시스템은 신뢰와 혁신을 바탕으로 지속 가능한 미래 가치를 만들어갑니다.";
+    $eng_title = 'ABOUT US';
+    $eng_desc = "신뢰와 원칙을 지켜온 투자 여정 속에서 검증된 성과와 성장의 기록을 담았습니다";
 } elseif ($cur_gnb === '제품 안내') {
     $img_path = '2';
     $eng_title = 'Our Products';
@@ -34,26 +34,70 @@ $bg_url = "/resource/images/sub/sub_visual_img_{$img_path}.jpg";
 ?>
 
 
-
-
 <section class="no-sub-visual">
+
+    <div class="no-container-xl">
+        <div class="txt">
+            <div>
+                <h2 class="f-heading-1  <?= isset($h2TextColorClass) ? $h2TextColorClass : '' ?>">
+                    <?= htmlspecialchars($eng_title, ENT_QUOTES) ?>
+                </h2>
+            </div>
+            <div>
+                <p class="f-heading-6 --regular">
+                    <?= $eng_desc ?>
+                </p>
+            </div>
+        </div>
+        <div class="breadcrumb">
+            <nav>
+                <ul>
+                    <li class="home">
+                        <a href="/">
+                            <i class="fa-solid fa-house"></i>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-has-menu">
+                        <button type="button" class="breadcrumb-toggle">
+                            회사소개 <i class="fa-solid fa-caret-down"></i>
+                        </button>
+                        <ul class="breadcrumb-menu" data-lenis-prevent>
+                            <?php foreach ($MENU_ITEMS as $di => $depth): ?>
+                            <?php $depth_active = $depth['isActive'] ? 'active' : ''; ?>
+                            <li
+                                class="<?= $depth_active ?> <?= !empty($depth['children']) ? 'breadcrumb-has-submenu' : '' ?>">
+                                <a href="<?= $depth['path'] ?? '#' ?>">
+                                    <?= $depth['title'] ?>
+                                    <?php if (!empty($depth['children'])): ?>
+                                    <i class="fa-solid fa-caret-down"></i>
+                                    <?php endif; ?>
+                                </a>
+
+                                <?php if (!empty($depth['children'])): ?>
+                                <ul class="breadcrumb-submenu">
+                                    <?php foreach ($depth['children'] as $child): ?>
+                                    <li>
+                                        <a href="<?= $child['href'] ?? '#' ?>">
+                                            <?= $child['title'] ?>
+                                        </a>
+                                    </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                                <?php endif; ?>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
     <figure class="img">
         <img src="<?=$bg_url?>" alt="">
     </figure>
     <figure class="bg"></figure>
-    <div class="no-container-xl">
-        <div>
-            <h2
-                class="f-heading-1 --semibold font-en reveal-char <?= isset($h2TextColorClass) ? $h2TextColorClass : '' ?>">
-                <?= htmlspecialchars($eng_title, ENT_QUOTES) ?>
-            </h2>
-        </div>
-        <div>
-            <p class="f-heading-6 --regular">
-                <?= $eng_desc ?>
-            </p>
-        </div>
-    </div>
+
 </section>
 
 

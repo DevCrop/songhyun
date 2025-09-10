@@ -2,11 +2,9 @@
 
 <?php
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+$basename = basename($path);
 
-// 'view' 케이스 제거: /pages/ 하위면 'sub', 그 외는 'main'
-$pageType = (strpos($path, '/pages/') !== false || rtrim($path, '/') === '/pages')
-    ? 'sub'
-    : 'main';
+$pageType = ($basename === '' || $basename === 'index.php') ? 'main' : 'sub';
 ?>
 
 <body data-page="<?= $pageType ?>">
@@ -17,10 +15,10 @@ $pageType = (strpos($path, '/pages/') !== false || rtrim($path, '/') === '/pages
                 <h1 class="no-header-logo">
                     <a href="/">
                         <figure>
-                            <img src="<?=$ROOT?>/resource/images/logo/logo-white.svg" alt="" class="logo-white">
-                            <img src="<?=$ROOT?>/resource/images/logo/logo-brand.svg" alt="" class="logo-brand">
+                            <img src="<?=$ROOT?>/resource/images/logo/logo-white.png" alt="" class="logo-white">
+                            <img src="<?=$ROOT?>/resource/images/logo/logo-brand.png" alt="" class="logo-brand">
                         </figure>
-                        <div class="--blind">미건시스템 (주) 식스닷</div>
+                        <div class="--blind">송현인베스트먼트</div>
                     </a>
                 </h1>
                 <nav class="no-header-menu">

@@ -61,7 +61,7 @@ textarea {
   align-items: center;
   width: 100%;
   max-width: 420px;
-  border-bottom: 1px solid var(--clr-border-default);
+  border-bottom: 2px solid var(--clr-border-strong);
   overflow: hidden;
   @include mq(sm) {
     max-width: none;

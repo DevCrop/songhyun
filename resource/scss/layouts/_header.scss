@@ -57,7 +57,6 @@
   }
 
   &.active {
-    height: 24rem;
     background: #fff;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-bottom: none;
@@ -71,9 +70,6 @@
     }
     a {
       color: #000;
-    }
-    .no-header-menu {
-      width: fluid(480, 640);
     }
   }
 
@@ -148,7 +144,7 @@
   }
   &-logo {
     height: 100%;
-    max-width: fluid(64, 86);
+    max-width: fluid(64, 128);
     height: var(--header-height);
     position: relative;
     z-index: 1;
@@ -156,7 +152,7 @@
     @include flex-center();
     figure {
       position: relative;
-      max-width: fluid(64, 86);
+      max-width: fluid(64, 128);
       height: var(--header-height);
       width: 100%;
       .logo-brand {
@@ -212,9 +208,8 @@
 
   &-menu {
     height: 100%;
-    width: fluid(320, 540);
+    width: fluid(320, 1280);
     transition: ease all 0.3s;
-
     @include mq(md) {
       display: none;
     }
@@ -226,10 +221,16 @@
         height: 100%;
         width: 100%;
         > a {
-          padding: 0 fluid(16, 32);
+          padding: 0 fluid(12, 24);
           height: 100%;
-
+          font-size: fluid(15, 18);
+          font-weight: 500;
+          transition: ease all 0.3s;
           @include flex-center();
+          &:hover {
+            color: #fff;
+            background: var(--clr-primary-def);
+          }
         }
       }
     }

@@ -17,8 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   clipImageAnimation();
   countingAnimation();
-  subVisualYReveal();
-  initIntro(lenis, 0);
+  initBreadCrumb();
+  //subVisualYReveal();
+  initIntro(lenis, 500);
 
   //REQUEST FORM ACTION
   const form = document.getElementById("requestForm");
@@ -276,6 +277,31 @@ function subVisualYReveal() {
   );
 }
 
+function initBreadCrumb() {
+  const root = document.querySelector(".breadcrumb");
+  if (!root) return;
+
+  root.querySelectorAll(".breadcrumb-toggle").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      // 기존 열림 닫기
+      root
+        .querySelectorAll(".breadcrumb-has-menu.is-open")
+        .forEach((el) => el.classList.remove("is-open"));
+
+      // 현재 토글
+      btn.parentElement.classList.toggle("is-open");
+    });
+  });
+
+  document.addEventListener("click", () => {
+    root
+      .querySelectorAll(".breadcrumb-has-menu.is-open")
+      .forEach((el) => el.classList.remove("is-open"));
+  });
+}
+
 function initHeader() {
   const root = document.getElementById("header");
 
@@ -286,12 +312,12 @@ function initHeader() {
 
   // 서브페이지일경우
   if (pageType === "sub") {
-    root.classList.add("transparent");
+    root.classList.add("normal");
   }
 
-  //상세페이지일경우
-  if (pageType === "view") {
-    root.classList.add("normal");
+  // 서브페이지일경우
+  if (pageType === "main") {
+    root.classList.add("transparent");
   }
 
   const menu = root.querySelector(".no-header__menu, .no-header-menu");
@@ -340,9 +366,22 @@ function initMainVisualSwiper() {
   new Swiper(el, {
     loop: true,
     speed: 1600,
+    autoplay: {
+      delay: 3000, // 3초마다
+      disableOnInteraction: false, // 유저가 스와이프해도 다시 자동 재생
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
     pagination: {
       el: el.querySelector(".swiper-pagination"),
-      clickable: true,
+      type: "fraction",
+      formatFractionCurrent: (number) => (number < 10 ? "0" + number : number),
+      formatFractionTotal: (number) => (number < 10 ? "0" + number : number),
+      renderFraction: (currentClass, totalClass) => {
+        return `<span class="${currentClass}"></span>/<span class="${totalClass}"></span>`;
+      },
     },
   });
 }

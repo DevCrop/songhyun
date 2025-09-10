@@ -1,5 +1,5 @@
 {
-  "site_name": "미건시스템",
+  "site_name": "송현 인베스트먼트",
   "pages": [
     {
       "title": "회사 소개",
@@ -12,41 +12,66 @@
       ]
     },
     {
-      "title": "제품 안내",
-      "dirname": "products",
+      "title": "운용 인력",
+      "dirname": "members",
       "pages": [
         {
-          "title": "전체 브랜드",
-          "filename": "gallery"
+          "title": "멤버 소개",
+          "filename": "member-list"
+        },
+        {
+          "title": "멤버 상세페이지",
+          "filename": "member-view"
         }
       ]
     },
     {
-      "title": "고객 지원",
-      "dirname": "cs",
+      "title": "서비스 펀드",
+      "dirname": "fund",
       "pages": [
         {
-          "title": "AS 센터",
-          "filename": "as"
-        },
-        {
-          "title": "간편 문의",
-          "board_no": "24"
-        },
-
-        {
-          "title": "FAQ",
-          "filename": "faq"
+          "title": "펀드 소개",
+          "filename": "fund-list"
         }
       ]
     },
     {
-      "title": "문의 지원",
-      "dirname": "contact",
+      "title": "투자 포토폴리오",
+      "dirname": "portfolio",
       "pages": [
         {
-          "title": "문의하기",
-          "filename": "inquiry"
+          "title": "투자 포토폴리오",
+          "filename": "port-list"
+        }
+      ]
+    },
+    {
+      "title": "Best Practice",
+      "dirname": "best",
+      "pages": [
+        {
+          "title": "수익률 높은 포토폴리오",
+          "filename": "best-list"
+        }
+      ]
+    },
+    {
+      "title": "Insight",
+      "dirname": "insight",
+      "pages": [
+        {
+          "title": "list",
+          "filename": "list"
+        }
+      ]
+    },
+    {
+      "title": "고객 문의",
+      "dirname": "inquiry",
+      "pages": [
+        {
+          "title": "contact",
+          "filename": "list"
         }
       ]
     }
